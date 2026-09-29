@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="light dark">
+<title>수수료 전환 로드맵</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600&display=swap">
+<style>
+:root{
+  --bg:#f1f4f4; --surface:#ffffff; --surface-2:#e7ecec; --surface-3:#f7f9f9;
+  --ink:#131e1d; --ink-2:#44534f; --ink-3:#5b6a68;
+  --line:#d6dedd; --line-2:#c2cdcb;
+  --accent:#1f5f5a; --accent-2:#2c807a; --accent-soft:#e2ecea;
+  --pos:#16704f; --neg:#b0342c; --warn:#9a6300; --warn-soft:#fbf2df;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4;
+  --on1:#ffffff; --on2:#ffffff; --on3:#0c2b21; --on4:#33240a; --on5:#3a1524;
+  --shadow:0 1px 2px rgba(19,30,29,.06), 0 8px 24px -16px rgba(19,30,29,.28);
+  --sans:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --serif:"Gowun Batang","Apple SD Gothic Neo",serif;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --bg:#121818; --surface:#1a2222; --surface-2:#202a2a; --surface-3:#172020;
+  --ink:#ecf2f1; --ink-2:#b4c2bf; --ink-3:#8d9c99;
+  --line:#2c3837; --line-2:#3a4746;
+  --accent:#52b0a6; --accent-2:#6cc4ba; --accent-soft:#1e2e2c;
+  --pos:#47c99a; --neg:#e58279; --warn:#d9a441; --warn-soft:#2a2418;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181;
+  --on1:#ffffff; --on2:#ffffff; --on3:#04170f; --on4:#1e1503; --on5:#ffffff;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+}}
+:root[data-theme="dark"]{
+  --bg:#121818; --surface:#1a2222; --surface-2:#202a2a; --surface-3:#172020;
+  --ink:#ecf2f1; --ink-2:#b4c2bf; --ink-3:#8d9c99;
+  --line:#2c3837; --line-2:#3a4746;
+  --accent:#52b0a6; --accent-2:#6cc4ba; --accent-soft:#1e2e2c;
+  --pos:#47c99a; --neg:#e58279; --warn:#d9a441; --warn-soft:#2a2418;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181;
+  --on1:#ffffff; --on2:#ffffff; --on3:#04170f; --on4:#1e1503; --on5:#ffffff;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+  font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}
+.page{max-width:1920px;margin:0 auto;padding-inline:24px;padding-block:28px 64px}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+.masthead{border-bottom:1px solid var(--line-2);padding-bottom:20px;margin-bottom:24px}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);font-weight:500;margin:0 0 8px}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(28px,4.4vw,40px);line-height:1.2;
+  margin:0 0 10px;letter-spacing:-.01em;text-wrap:balance}
+.dek{margin:0;color:var(--ink-2);max-width:72ch;font-weight:300;font-size:17px}
+.srcline{margin:14px 0 0;font-size:13px;color:var(--ink-3);font-family:var(--mono)}
+.srcline a{color:var(--accent)}
+
+.layout{display:grid;grid-template-columns:minmax(0,400px) minmax(0,1fr);gap:28px;align-items:start}
+@media (max-width:1000px){.layout{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:6px;
+  box-shadow:var(--shadow);overflow:hidden}
+@media (min-width:1001px){.panel{position:sticky;top:env(safe-area-inset-top,0px);
+  max-height:calc(100vh - 24px);overflow-y:auto}}
+.panel-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+  padding:14px 16px;border-bottom:1px solid var(--line);background:var(--surface-3)}
+.panel-head h2{margin:0;font-size:13px;font-weight:600;letter-spacing:.02em}
+.preset{font-family:var(--mono);font-size:11.5px;padding:4px 8px;border:1px solid var(--line-2);
+  border-radius:3px;background:var(--surface);color:var(--ink-2);cursor:pointer}
+.preset:hover{border-color:var(--accent);color:var(--accent)}
+.grp{padding:4px 16px 0}
+.grp-label{font-family:var(--mono);font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink-3);padding:16px 0 6px;font-weight:500}
+.ctl{padding:12px 0;border-top:1px solid var(--line)}
+.grp .ctl:first-of-type{border-top:none}
+.ctl-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:9px}
+.ctl-top label{font-size:14.5px;font-weight:500}
+.ctl-val{display:flex;align-items:baseline;gap:2px}
+.ctl-val input{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:16.5px;
+  font-weight:600;color:var(--ink);background:transparent;border:none;
+  border-bottom:1px solid transparent;text-align:right;width:8ch;padding:0;-moz-appearance:textfield}
+.ctl-val input::-webkit-outer-spin-button,.ctl-val input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.ctl-val input:hover{border-bottom-color:var(--line-2)}
+.ctl-val input:focus{outline:none;border-bottom-color:var(--accent)}
+.ctl-val .u{font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+.ctl-help{margin:8px 0 0;font-size:13px;color:var(--ink-3);line-height:1.55}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:3px;
+  background:linear-gradient(to right,var(--accent) 0 var(--pct,50%),var(--surface-2) var(--pct,50%) 100%);
+  cursor:pointer;display:block}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;
+  background:var(--accent);border:2px solid var(--surface);box-shadow:0 0 0 1px var(--accent)}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--accent);
+  border:2px solid var(--surface);box-shadow:0 0 0 1px var(--accent)}
+input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+
+/* 카테고리 표 */
+.cattbl{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px}
+.cattbl th{font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--ink-3);
+  font-weight:500;text-align:right;padding:0 4px 6px;white-space:nowrap}
+.cattbl th:first-child{text-align:left}
+.cattbl td{padding:4px;border-top:1px solid var(--line)}
+.cattbl td:first-child{font-size:13px;word-break:keep-all}
+.cattbl input{width:100%;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:13.5px;
+  text-align:right;background:var(--surface-3);border:1px solid var(--line-2);border-radius:3px;
+  padding:5px 6px;color:var(--ink);-moz-appearance:textfield}
+.cattbl input::-webkit-outer-spin-button,.cattbl input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.cattbl input:focus{outline:none;border-color:var(--accent)}
+.sw{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px;vertical-align:1px}
+.cattbl tfoot td{border-top:1.5px solid var(--ink-3);font-family:var(--mono);font-weight:600;
+  text-align:right;padding-top:7px;font-size:13px}
+.cattbl tfoot td:first-child{font-family:var(--sans);text-align:left}
+.flag{margin:10px 0 0;padding:9px 11px;border-left:3px solid var(--warn);background:var(--warn-soft);
+  border-radius:0 3px 3px 0;font-size:13px;line-height:1.6;color:var(--ink-2)}
+.flag b{color:var(--warn);font-weight:600}
+
+.results{display:flex;flex-direction:column;gap:22px;min-width:0}
+section{background:var(--surface);border:1px solid var(--line);border-radius:6px;box-shadow:var(--shadow)}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  padding:15px 18px;border-bottom:1px solid var(--line)}
+.sec-head h2{margin:0;font-size:17px;font-weight:600;letter-spacing:-.005em}
+.sec-head .note{font-size:12.5px;color:var(--ink-3);font-family:var(--mono)}
+.sec-body{padding:20px}
+
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line)}
+@media (max-width:820px){.stats{grid-template-columns:minmax(0,1fr)}}
+.stat{background:var(--surface);padding:18px 20px;display:flex;flex-direction:column;gap:4px}
+.stat .who{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;color:var(--ink-3)}
+.stat .big{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:30px;font-weight:600;
+  line-height:1.15;letter-spacing:-.02em}
+.stat .sub{font-size:14px;color:var(--ink-2);line-height:1.5}
+.stat .sub b{font-family:var(--mono);font-weight:600;color:var(--ink)}
+.pos{color:var(--pos)} .neg{color:var(--neg)}
+
+.chartwrap{width:100%;overflow-x:auto}
+svg{display:block;width:100%;height:auto}
+.chart{min-width:760px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 20px;margin-top:14px;font-size:13.5px;color:var(--ink-2)}
+.legend span b{font-family:var(--mono);color:var(--ink)}
+
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(520px,1fr));gap:22px}
+.alerts{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.alert{padding:12px 15px;border-radius:4px;font-size:14px;line-height:1.6;
+  border-left:3px solid var(--accent);background:var(--accent-soft)}
+.alert.warn{border-left-color:var(--warn);background:var(--warn-soft)}
+.alert.bad{border-left-color:var(--neg);background:color-mix(in srgb,var(--neg) 9%,var(--surface))}
+.alert b{font-weight:600}
+
+.tbl{width:100%;min-width:900px;border-collapse:collapse;font-size:13.5px}
+.tbl th,.tbl td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right;
+  font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.tbl th:first-child,.tbl td:first-child{text-align:left;font-family:var(--sans)}
+.tbl thead th{font-size:12px;letter-spacing:.04em;color:var(--ink-3);font-weight:500;
+  background:var(--surface-3);position:sticky;top:0}
+.tbl tr.mark td{background:var(--accent-soft);font-weight:600}
+.scrollx{overflow:auto;max-height:520px;border:1px solid var(--line);border-radius:4px}
+.memos{font-size:14.5px;color:var(--ink-2);line-height:1.75}
+.memos ul{margin:0;padding-left:1.1em}
+.memos li{margin:0 0 8px}
+.memos li::marker{color:var(--accent)}
+.memos h3{font-size:13px;font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase;
+  color:var(--accent);margin:0 0 8px;font-weight:500}
+.memos .blk+.blk{margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}
+footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-family:var(--mono)}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="masthead">
+    <p class="eyebrow">대표 보고 · 수수료 정책</p>
+    <h1>수수료 전환 로드맵</h1>
+    <p class="dek">현재 9% 단일 요율로 출발해 <b>6개월 뒤 카테고리별 차등 요율(평균 15%)</b>로 전환했을 때, 유저·주문·손익이 24개월간 어떻게 움직이는지 계산합니다. 모든 값은 좌측에서 바꿀 수 있습니다.</p>
+    <p class="srcline">건당 정산 구조는 <a href="./">셀러 정산 마진 시뮬레이터</a>에서 확인 · 아래 수치는 전부 가정값이며 근거는 「가정과 확인 필요」 참조</p>
+  </header>
+
+  <div class="layout">
+    <aside class="panel">
+      <div class="panel-head"><h2>가정값</h2>
+        <button class="preset" id="reset" type="button">기본값 복원</button></div>
+      <div id="controls"></div>
+      <div class="grp">
+        <div class="grp-label">카테고리 믹스 · 수수료율</div>
+        <table class="cattbl" id="cattbl">
+          <thead><tr><th>카테고리</th><th>비중 %</th><th>현행 %</th><th>전환 후 %</th></tr></thead>
+          <tbody></tbody>
+          <tfoot><tr><td>가중평균</td><td id="mixSum">—</td><td id="rateNow">—</td><td id="rateAfter">—</td></tr></tfoot>
+        </table>
+        <div class="flag"><b>확인 필요.</b> 카테고리별 요율은 쿠팡·네이버 모두 셀러 포털 로그인 뒤에만 공개돼 공개 자료로 확정할 수 없었습니다. 아래 값은 업계 통념 범위로 채운 <b>추정치</b>입니다. 특히 <b>건기식·영양식</b> 요율은 실제 조사로 대체해야 합니다.</div>
+      </div>
+      <div style="height:20px"></div>
+    </aside>
+
+    <main class="results">
+      <section aria-label="시점별 요약"><div class="stats" id="stats"></div></section>
+
+      <section>
+        <div class="sec-head"><h2 id="hOp">월 공헌이익</h2>
+          <span class="note" id="noteOp"></span></div>
+        <div class="sec-body">
+          <div id="alerts" class="alerts"></div>
+          <div class="chartwrap"><svg class="chart" id="opSvg" viewBox="0 0 1200 380" role="img" aria-label="월 영업이익 추이"></svg></div>
+        </div>
+      </section>
+
+      <section>
+        <div class="sec-head"><h2 id="hCum">누적 공헌이익</h2>
+          <span class="note" id="noteCum"></span></div>
+        <div class="sec-body">
+          <div class="chartwrap"><svg class="chart" id="cumSvg" viewBox="0 0 1200 380" role="img" aria-label="누적 영업이익 추이"></svg></div>
+        </div>
+      </section>
+
+      <div class="grid2">
+        <section>
+          <div class="sec-head"><h2>유저와 주문</h2><span class="note" id="noteGrow"></span></div>
+          <div class="sec-body">
+            <div class="chartwrap"><svg class="chart" id="userSvg" viewBox="0 0 1200 340" role="img" aria-label="월 주문 건수 추이"></svg></div>
+          </div>
+        </section>
+        <section>
+          <div class="sec-head"><h2>카테고리별 수수료 매출</h2><span class="note">전환 시점에 계단이 생깁니다</span></div>
+          <div class="sec-body">
+            <div class="chartwrap"><svg class="chart" id="catSvg" viewBox="0 0 1200 340" role="img" aria-label="카테고리별 수수료 매출"></svg></div>
+            <div class="legend" id="catLegend"></div>
+          </div>
+        </section>
+      </div>
+
+      <section>
+        <div class="sec-head"><h2>흑자 조건</h2>
+          <span class="note" id="noteSolve"></span></div>
+        <div class="sec-body">
+          <p style="margin:0 0 16px;font-size:14.5px;color:var(--ink-2);line-height:1.7">다른 값을 모두 고정한 채 <b>하나만</b> 움직여 그 달의 월 손익을 0으로 만드는 값입니다. 현실적으로 어느 레버를 당길 수 있는지 고르는 데 씁니다.</p>
+          <div class="stats" id="solve" style="border:1px solid var(--line);border-radius:4px;overflow:hidden"></div>
+        </div>
+      </section>
+
+      <section>
+        <div class="sec-head"><h2>월별 상세</h2><span class="note">전환 시점과 6·12·24개월이 강조됩니다</span></div>
+        <div class="sec-body"><div class="scrollx"><table class="tbl" id="tbl"></table></div></div>
+      </section>
+
+      <section>
+        <div class="sec-head"><h2>가정과 확인 필요</h2>
+          <span class="note">이 목록이 정리되기 전에는 숫자도 확정이 아닙니다</span></div>
+        <div class="sec-body memos">
+          <div class="blk">
+            <h3>유저 · 전환</h3>
+            <ul>
+              <li><b>현재 유저 33만 명</b>은 인투펫 앱 누적 가입자 기준입니다. 커머스 노출이 가능한 <b>활성 유저</b>가 몇 명인지가 실제 출발점이므로 이 값을 먼저 확정해야 합니다.</li>
+              <li><b>구매 전환율</b>은 월간 유저 대비 구매자 비율입니다. 오픈 초기 커머스는 1~3% 구간이 흔하지만, 기존 앱 트래픽을 그대로 태우는 경우 첫 달만 높게 튀고 빠르게 떨어집니다. <b>실측 전까지는 보수적으로 잡는 편이 안전합니다.</b></li>
+              <li><b>월 유입률과 이탈률</b>은 앱 전체 기준이 아니라 커머스를 쓸 유저 기준이어야 합니다.</li>
+            </ul>
+          </div>
+          <div class="blk">
+            <h3>수수료</h3>
+            <ul>
+              <li><b>카테고리별 요율은 추정치입니다.</b> 쿠팡·네이버 모두 카테고리 요율표를 셀러 포털 로그인 뒤에만 공개합니다. 입점 예정 브랜드가 쓰던 타 플랫폼 요율을 받아오는 것이 가장 빠른 확인 방법입니다.</li>
+              <li><b>건기식·영양식</b>은 마진이 높아 요율도 높게 잡히는 것이 일반적이지만, 동시에 <b>규제 품목</b>이라 입점 심사·표시광고 관리 비용이 따로 듭니다. 요율만 높게 잡고 운영비를 빼먹으면 실제 기여가 과대평가됩니다.</li>
+              <li><b>사료는 요율을 낮게 가져가는 편이 유리합니다.</b> 반복구매율이 가장 높아 유저를 묶어두는 역할을 하고, 대용량·저마진이라 요율 저항도 큽니다.</li>
+              <li><b>전환 시점에 셀러 이탈</b>이 발생합니다. 이 계산기는 이탈을 0으로 두고 있으니, 실제로는 전환 직후 주문이 꺾이는 구간을 따로 봐야 합니다.</li>
+            </ul>
+          </div>
+          <div class="blk">
+            <h3>비용</h3>
+            <ul>
+              <li><b>PG 요율</b>이 손익에 크게 작용합니다. 계약이 VAT 별도 표기라면 입력값에 1.1을 곱해 넣어야 실제 지출과 맞습니다.</li>
+              <li><b>증분 고정비는 0으로 두었습니다.</b> 커머스를 기존 인력으로 진행한다는 전제입니다. 따라서 화면의 숫자는 <b>공헌이익</b>이며 인건비를 배부한 영업이익이 아닙니다. 대표 보고에서 둘을 섞어 말하면 나중에 문제가 되므로 <b>"증분 비용 없이 이만큼 남는다"</b>로 표현하는 것이 정확합니다. 전담 인력을 새로 뽑는 시점에 그 비용을 넣어 다시 보십시오.</li>
+              <li><b>포인트 지급률</b>은 GMV 대비 플랫폼이 부담하는 포인트입니다. 리뷰포인트 중 셀러 부담분은 예수금이라 여기서 빠집니다.</li>
+              <li><b>기존 적립 포인트 9,200만 P는 손익에서 제외했습니다.</b> 6개월 유효기간으로 소멸되므로 부채로 잡지 않는다는 방침입니다. 다만 <b>오픈 시점에 유효기간이 실제로 적용되고 있는지는 확인이 필요합니다</b> — 적용 전에 커머스 결제를 열면 환산 현금가치 약 6,133만원이 그대로 나갑니다. 좌측 「월 소진율」을 올리면 그 경우를 볼 수 있습니다.</li>
+              <li><b>마케팅비(CAC)는 0으로 두었습니다.</b> 9% 구간에서는 건당 기여가 얇아 유료 마케팅 회수가 구조적으로 어렵다는 판단이며, 이것 자체가 보고에서 컨펌받을 항목입니다.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        금액은 원 단위 · 판매가는 VAT 포함 소비자가 · 수수료 매출은 공급가 기준(VAT 별도)입니다.<br>
+        이 페이지의 기본값은 전부 가정이며 실제 운영 수치가 아닙니다. 확정된 값은 좌측에 직접 입력해 쓰십시오.
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s)};
+  var won=function(x){return (x<0?"−":"")+Math.abs(Math.round(x)).toLocaleString("ko-KR")};
+  var cnt=function(x){return Math.round(x).toLocaleString("ko-KR")};
+  var pct=function(x,d){return (x*100).toFixed(d===undefined?1:d)+"%"};
+  function money(v){ // 억/만 단위 축약
+    var a=Math.abs(v), s=v<0?"−":"";
+    if(a>=100000000) return s+(a/100000000).toFixed(a>=1000000000?0:1)+"억";
+    if(a>=10000) return s+(a/10000).toFixed(a>=1000000?0:0)+"만";
+    return s+Math.round(a).toLocaleString("ko-KR");
+  }
+
+  var BASE={signups:437000, mau:112619, newSignup:10380, actRate:30, churn:2, conv:2, opb:1.3,
+            aov:25000, ship:3000, ptShare:5, ptCost:2, pg:4.5, vat:10,
+            ptBal:92000000, ptRate:1.5, ptBurn:0,
+            fixed:0, months:24, sw:7};
+  var CATS=[
+    {k:"feed",  n:"사료",           c:"--s1", mix:40, now:9, aft:12},
+    {k:"treat", n:"간식",           c:"--s2", mix:20, now:9, aft:16},
+    {k:"supp",  n:"영양제 · 건기식", c:"--s3", mix:15, now:9, aft:20},
+    {k:"goods", n:"용품",           c:"--s4", mix:20, now:9, aft:16},
+    {k:"etc",   n:"기타",           c:"--s5", mix:5,  now:9, aft:15}
+  ];
+  var SPEC=[
+    {grp:"유저 · 실측"},
+    {id:"signups",label:"누적 가입자",min:0,max:2000000,step:1000,unit:"명",help:"참고값. 계산에는 쓰지 않습니다 — 커머스가 붙는 모수는 아래 MAU입니다"},
+    {id:"mau",label:"활성 유저 (MAU)",min:0,max:1000000,step:1000,unit:"명",help:"GA4 28일 기준 실측. 대외로는 15만으로 말하지만 산출 정의가 미확정입니다"},
+    {id:"newSignup",label:"월 신규 가입",min:0,max:100000,step:500,unit:"명",help:"일 346명 × 30일. UV가 전 구간 마이너스인 감소 국면입니다"},
+    {id:"actRate",label:"신규 활성화율",min:0,max:100,step:5,unit:"%",help:"가입 후 첫 달 병원 연동 구간에서 70%가 이탈합니다. 넘어선 30%만 활성 유저로 잡습니다"},
+    {id:"churn",label:"월 이탈률",min:0,max:15,step:0.5,unit:"%",help:"첫 달을 넘긴 유저는 98%가 유지됩니다"},
+    {id:"conv",label:"월 구매 전환율",min:0,max:20,step:0.1,unit:"%",help:"<b>미검증 가정.</b> 활성 유저 중 그 달에 한 번이라도 구매한 비율"},
+    {id:"opb",label:"구매자당 월 주문",min:0.5,max:6,step:0.1,unit:"건",help:"<b>미검증 가정</b>"},
+    {grp:"주문"},
+    {id:"aov",label:"평균 객단가",min:5000,max:120000,step:1000,unit:"원",help:"상품가 · VAT 포함"},
+    {id:"ship",label:"평균 배송비",min:0,max:10000,step:500,unit:"원"},
+    {id:"ptShare",label:"포인트 결제 비중",min:0,max:30,step:0.5,unit:"%",help:"객단가 대비 · PG 부과 대상에서 빠집니다"},
+    {grp:"수수료 전환"},
+    {id:"sw",label:"전환 시점",min:1,max:24,step:1,unit:"개월차",help:"이 달부터 카테고리별 차등 요율이 적용됩니다. 7이면 6개월 뒤"},
+    {grp:"기존 포인트 (기본 제외)"},
+    {id:"ptBal",label:"기존 포인트 잔액",min:0,max:300000000,step:1000000,unit:"P",help:"현재 잔액 9,200만 P. 환산비율을 적용하면 현금가치 약 6,133만원입니다. <b>6개월 유효기간으로 소멸되므로 부채로 잡지 않습니다</b> — 아래 소진율이 0이면 손익에 반영되지 않습니다"},
+    {id:"ptRate",label:"포인트 환산비율",min:1,max:5,step:0.1,unit:"P = 1원"},
+    {id:"ptBurn",label:"월 소진율",min:0,max:30,step:0.5,unit:"%",help:"<b>기본 0%</b> — 소멸 전제로 제외. 유효기간 집행이 늦어져 실제로 쓰이는 경우를 보려면 올려보십시오"},
+    {grp:"비용"},
+    {id:"pg",label:"PG 결제수수료율",min:0,max:8,step:0.1,unit:"%",help:"고객 실결제액 기준 · 계약이 VAT 별도라면 1.1을 곱해 넣으십시오"},
+    {id:"ptCost",label:"포인트 지급률",min:0,max:15,step:0.5,unit:"%",help:"GMV 대비 플랫폼 부담분. 셀러 부담 리뷰포인트는 예수금이라 제외"},
+    {id:"fixed",label:"증분 고정비 (월)",min:0,max:300000000,step:1000000,unit:"원",help:"<b>기존 인력으로 진행하면 0입니다.</b> 0이면 화면의 숫자는 영업이익이 아니라 <b>공헌이익</b>(수수료 매출 − PG − 포인트)입니다. 전담 인력을 새로 뽑는다면 그 비용만 넣으십시오"},
+    {id:"vat",label:"부가세율",min:0,max:20,step:1,unit:"%"},
+    {grp:"기간"},
+    {id:"months",label:"전망 기간",min:6,max:36,step:1,unit:"개월"}
+  ];
+  var V=Object.assign({},BASE), C=CATS.map(function(c){return Object.assign({},c)});
+  window.__V=V;
+
+  /* ---------- 컨트롤 ---------- */
+  var host=$("#controls"), cur=null;
+  SPEC.forEach(function(s){
+    if(s.grp){ cur=document.createElement("div"); cur.className="grp";
+      var h=document.createElement("div"); h.className="grp-label"; h.textContent=s.grp;
+      cur.appendChild(h); host.appendChild(cur); return; }
+    var el=document.createElement("div"); el.className="ctl";
+    el.innerHTML='<div class="ctl-top"><label for="r_'+s.id+'">'+s.label+'</label>'+
+      '<span class="ctl-val"><input type="number" id="n_'+s.id+'" aria-label="'+s.label+'" '+
+      'min="'+s.min+'" max="'+s.max+'" step="'+s.step+'"><span class="u">'+s.unit+'</span></span></div>'+
+      '<input type="range" id="r_'+s.id+'" min="'+s.min+'" max="'+s.max+'" step="'+s.step+'">'+
+      (s.help?'<p class="ctl-help">'+s.help+'</p>':'');
+    cur.appendChild(el);
+    var rg=el.querySelector("input[type=range]"), nb=el.querySelector("input[type=number]");
+    rg.addEventListener("input",function(){V[s.id]=parseFloat(rg.value);nb.value=V[s.id];fill(rg,s);render();});
+    nb.addEventListener("input",function(){var x=parseFloat(nb.value);if(isNaN(x))return;
+      V[s.id]=Math.min(s.max,Math.max(s.min,x));rg.value=V[s.id];fill(rg,s);render();});
+    nb.addEventListener("blur",function(){nb.value=V[s.id];});
+    s._rg=rg; s._nb=nb;
+  });
+  function fill(rg,s){rg.style.setProperty("--pct",((V[s.id]-s.min)/(s.max-s.min)*100)+"%");}
+
+  /* ---------- 카테고리 표 ---------- */
+  var tb=$("#cattbl tbody");
+  C.forEach(function(c,i){
+    var tr=document.createElement("tr");
+    tr.innerHTML='<td><span class="sw" style="background:var('+c.c+')"></span>'+c.n+'</td>'+
+      ['mix','now','aft'].map(function(f){
+        return '<td><input type="number" min="0" max="100" step="0.5" data-i="'+i+'" data-f="'+f+'"></td>';}).join('');
+    tb.appendChild(tr);
+  });
+  tb.addEventListener("input",function(e){
+    var t=e.target; if(t.tagName!=="INPUT") return;
+    var x=parseFloat(t.value); if(isNaN(x)) return;
+    C[+t.dataset.i][t.dataset.f]=Math.min(100,Math.max(0,x)); render();
+  });
+  function syncCats(){
+    tb.querySelectorAll("input").forEach(function(inp){ inp.value=C[+inp.dataset.i][inp.dataset.f]; });
+  }
+  function syncAll(){
+    SPEC.forEach(function(s){ if(s._rg){s._rg.value=V[s.id];s._nb.value=V[s.id];fill(s._rg,s);} });
+    syncCats();
+  }
+  $("#reset").addEventListener("click",function(){
+    V=Object.assign({},BASE); window.__V=V; C=CATS.map(function(c){return Object.assign({},c)}); syncAll(); render();
+  });
+
+  /* ---------- 모델 ---------- */
+  function compute(OV){
+    var V=Object.assign({},window.__V,OV||{});
+    var mixSum=C.reduce(function(a,c){return a+c.mix},0) || 1;
+    var rNow=C.reduce(function(a,c){return a+c.mix*c.now},0)/mixSum/100;
+    var rAft=C.reduce(function(a,c){return a+c.mix*c.aft},0)/mixSum/100;
+    var vat=V.vat/100, pg=V.pg/100;
+    var rows=[], users=V.mau, cum=0, bepMonth=null, firstPos=null;
+    var bal=V.ptBal/(V.ptRate>0?V.ptRate:1);      // 기존 포인트 현금 환산 잔액
+    for(var t=1;t<=V.months;t++){
+      if(t>1) users=users*(1-V.churn/100)+V.newSignup*V.actRate/100;
+      var buyers=users*V.conv/100;
+      var orders=buyers*V.opb;
+      var gmv=orders*V.aov;
+      var after=t>=V.sw;
+      var rate=after?rAft:rNow;
+      var fee=gmv*rate;                                  // 공급가 기준 수수료 매출
+      var paid=gmv*(1-V.ptShare/100)+orders*V.ship;      // 고객 실결제 (PG 부과 대상)
+      var pgCost=paid*pg/(1+vat);                        // 공급가 기준
+      var ptCost=gmv*V.ptCost/100;
+      var legacy=Math.min(bal, bal*V.ptBurn/100);   // 기존 포인트 사용 → 셀러 보전 현금
+      bal-=legacy;
+      var op=fee-pgCost-ptCost-legacy-V.fixed;
+      cum+=op;
+      if(firstPos===null&&op>0) firstPos=t;
+      if(bepMonth===null&&cum>0) bepMonth=t;
+      var byCat=C.map(function(c){return gmv*(c.mix/mixSum)*((after?c.aft:c.now)/100)});
+      rows.push({t:t,users:users,buyers:buyers,orders:orders,gmv:gmv,rate:rate,
+                 fee:fee,pgCost:pgCost,ptCost:ptCost,legacy:legacy,bal:bal,
+                 op:op,cum:cum,byCat:byCat,after:after});
+    }
+    return {rows:rows,rNow:rNow,rAft:rAft,mixSum:mixSum,bepMonth:bepMonth,firstPos:firstPos,legacyTotal:V.ptBal/(V.ptRate>0?V.ptRate:1)};
+  }
+
+  /* ---------- 차트 공통 ---------- */
+  var F={sans:'IBM Plex Sans KR, sans-serif', mono:'IBM Plex Mono, monospace'};
+  function axes(g,L,T,iw,ih,lo,hi,maxT,sw){
+    for(var i=0;i<=5;i++){
+      var v=lo+(hi-lo)*i/5, y=T+ih-(v-lo)/(hi-lo)*ih;
+      g.push('<line x1="'+L+'" y1="'+y.toFixed(1)+'" x2="'+(L+iw)+'" y2="'+y.toFixed(1)+'" stroke="var(--line)" stroke-width="1"/>');
+      g.push('<text x="'+(L-10)+'" y="'+(y+4).toFixed(1)+'" text-anchor="end" font-family="'+F.mono+'" font-size="12" fill="var(--ink-3)">'+money(v)+'</text>');
+    }
+    var step=maxT>18?6:3;
+    for(var t=step;t<=maxT;t+=step){
+      var x=L+(t-1)/(maxT-1)*iw;
+      g.push('<text x="'+x.toFixed(1)+'" y="'+(T+ih+22)+'" text-anchor="middle" font-family="'+F.mono+'" font-size="12" fill="var(--ink-3)">'+t+'</text>');
+    }
+    g.push('<text x="'+(L+iw)+'" y="'+(T+ih+40)+'" text-anchor="end" font-family="'+F.sans+'" font-size="12.5" fill="var(--ink-3)">개월차</text>');
+    if(sw>1&&sw<=maxT){
+      var sx=L+(sw-1)/(maxT-1)*iw;
+      g.push('<line x1="'+sx.toFixed(1)+'" y1="'+T+'" x2="'+sx.toFixed(1)+'" y2="'+(T+ih)+'" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="4 3"/>');
+      g.push('<text x="'+(sx+8).toFixed(1)+'" y="'+(T+16)+'" font-family="'+F.sans+'" font-size="13" font-weight="600" fill="var(--accent)">'+sw+'개월차 · 요율 전환</text>');
+    }
+  }
+  function lineChart(el,rows,pick,color,label,sw){
+    var W=1200,H=el.id==="opSvg"||el.id==="cumSvg"?380:340,L=96,R=24,T=26,B=52;
+    var iw=W-L-R, ih=H-T-B, n=rows.length;
+    var vals=rows.map(pick);
+    var lo=Math.min(0,Math.min.apply(null,vals)), hi=Math.max.apply(null,vals);
+    if(hi===lo) hi=lo+1;
+    var pad=(hi-lo)*0.12; lo-=pad; hi+=pad;
+    var X=function(i){return L+i/(n-1)*iw}, Y=function(v){return T+ih-(v-lo)/(hi-lo)*ih};
+    var g=[];
+    axes(g,L,T,iw,ih,lo,hi,n,sw);
+    if(lo<0&&hi>0) g.push('<line x1="'+L+'" y1="'+Y(0).toFixed(1)+'" x2="'+(L+iw)+'" y2="'+Y(0).toFixed(1)+'" stroke="var(--ink-3)" stroke-width="1.5" stroke-dasharray="4 3"/>');
+    var d=vals.map(function(v,i){return (i?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1)}).join(' ');
+    g.push('<path d="'+d+'" fill="none" stroke="var('+color+')" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>');
+    [5,11,n-1].forEach(function(i){
+      if(i<0||i>=n) return;
+      g.push('<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(vals[i]).toFixed(1)+'" r="5" fill="var('+color+')" stroke="var(--surface)" stroke-width="2"/>');
+      var anchor=i>n*0.75?"end":"middle", dx=i>n*0.75?-8:0;
+      g.push('<text x="'+(X(i)+dx).toFixed(1)+'" y="'+(Y(vals[i])-13).toFixed(1)+'" text-anchor="'+anchor+'" font-family="'+F.mono+'" font-size="13" font-weight="600" fill="var(--ink)">'+money(vals[i])+'</text>');
+    });
+    g.push('<text x="'+L+'" y="'+(T-8)+'" font-family="'+F.sans+'" font-size="12.5" fill="var(--ink-3)">'+label+'</text>');
+    el.innerHTML=g.join("");
+  }
+  function stackChart(el,rows,sw){
+    var W=1200,H=340,L=96,R=24,T=26,B=52;
+    var iw=W-L-R, ih=H-T-B, n=rows.length;
+    var tot=rows.map(function(r){return r.byCat.reduce(function(a,b){return a+b},0)});
+    var hi=Math.max.apply(null,tot)*1.12, lo=0;
+    var X=function(i){return L+i/(n-1)*iw}, Y=function(v){return T+ih-(v-lo)/(hi-lo)*ih};
+    var g=[];
+    axes(g,L,T,iw,ih,lo,hi,n,sw);
+    var base=new Array(n).fill(0);
+    C.forEach(function(c,ci){
+      var top=rows.map(function(r,i){return base[i]+r.byCat[ci]});
+      var up=top.map(function(v,i){return (i?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1)}).join(' ');
+      var dn=base.map(function(v,i){return 'L'+X(n-1-i).toFixed(1)+' '+Y(base[n-1-i]).toFixed(1)}).join(' ');
+      g.push('<path d="'+up+' '+dn+' Z" fill="var('+c.c+')" fill-opacity="0.9" stroke="var(--surface)" stroke-width="1"/>');
+      base=top;
+    });
+    g.push('<text x="'+L+'" y="'+(T-8)+'" font-family="'+F.sans+'" font-size="12.5" fill="var(--ink-3)">월 수수료 매출 (공급가)</text>');
+    el.innerHTML=g.join("");
+  }
+
+  /* ---------- 렌더 ---------- */
+  function render(){
+    var m=compute(), R=m.rows;
+    var PL=(V.fixed>0)?"영업이익":"공헌이익";
+    $("#mixSum").textContent=m.mixSum.toFixed(0)+"%";
+    $("#rateNow").textContent=pct(m.rNow);
+    $("#rateAfter").textContent=pct(m.rAft);
+
+    var pick=function(i){return R[Math.min(i,R.length-1)]};
+    var m6=pick(5), m12=pick(11), m24=R[R.length-1];
+    function card(t,r){
+      return '<div class="stat"><span class="who">'+t+'</span>'+
+        '<span class="big '+(r.op<0?"neg":"pos")+'">'+money(r.op)+'</span>'+
+        '<span class="sub">활성 유저 <b>'+cnt(r.users)+'</b>명 · 월 주문 <b>'+cnt(r.orders)+'</b>건<br>'+
+        'GMV <b>'+money(r.gmv)+'</b> · 수수료 매출 <b>'+money(r.fee)+'</b> (요율 '+pct(r.rate)+')<br>'+
+        '누적 <b class="'+(r.cum<0?"neg":"pos")+'">'+money(r.cum)+'</b></span></div>';
+    }
+    $("#stats").innerHTML=card("6개월차",m6)+card("12개월차",m12)+(R.length+"개월차"?card(R.length+"개월차",m24):"");
+
+    var al=[];
+    if(m.firstPos) al.push('<div class="alert"><b>월 '+PL+' 흑자 '+(m.firstPos===1?"첫 달부터":m.firstPos+"개월차부터")+'.</b>'+(m.firstPos===1?" 증분 비용 없이 시작하면 처음부터 플러스입니다.":" 그전까지는 매달 적자가 쌓입니다.")+'</div>');
+    else al.push('<div class="alert bad"><b>전망 기간 내 월 '+PL+' 흑자 전환이 없습니다.</b> 요율·전환율·비용 중 하나를 바꿔야 합니다.</div>');
+    if(m.bepMonth) al.push('<div class="alert"><b>누적 손익분기 '+m.bepMonth+'개월차.</b> 그때까지 필요한 최대 누적 적자는 <span class="num">'+money(Math.min.apply(null,R.map(function(r){return r.cum})))+'</span>원입니다.</div>');
+    else al.push('<div class="alert warn"><b>전망 기간 내 누적 흑자 전환이 없습니다.</b> 최종 누적 '+money(m24.cum)+'원입니다.</div>');
+    var before=R[Math.max(0,V.sw-2)], after=R[Math.min(R.length-1,V.sw-1)];
+    if(V.sw>1&&V.sw<=R.length) al.push('<div class="alert"><b>요율 전환 효과.</b> '+(V.sw-1)+'개월차 월 '+PL+' <span class="num">'+money(before.op)+'</span>원 → '+V.sw+'개월차 <span class="num">'+money(after.op)+'</span>원. 같은 주문량에서 <b>'+money(after.op-before.op)+'원</b>이 더 남습니다.</div>');
+    $("#alerts").innerHTML=al.join("");
+
+    $("#hOp").textContent="월 "+PL; $("#hCum").textContent="누적 "+PL;
+    $("#noteOp").textContent="요율 "+pct(m.rNow)+" → "+pct(m.rAft)+" · "+V.sw+"개월차 전환";
+    $("#noteCum").textContent=m.bepMonth?("누적 손익분기 "+m.bepMonth+"개월차"):"기간 내 누적 흑자 없음";
+    $("#noteGrow").textContent="MAU "+cnt(V.mau)+"명에서 출발 · 누적 가입 "+cnt(V.signups)+"명";
+
+    lineChart($("#opSvg"),R,function(r){return r.op},"--s1","월 "+PL+" (원)",V.sw);
+    lineChart($("#cumSvg"),R,function(r){return r.cum},"--s3","누적 "+PL+" (원)",V.sw);
+    lineChart($("#userSvg"),R,function(r){return r.orders},"--s2","월 주문 건수",V.sw);
+    stackChart($("#catSvg"),R,V.sw);
+    $("#catLegend").innerHTML=C.map(function(c,i){
+      var last=R[R.length-1];
+      return '<span><span class="sw" style="background:var('+c.c+')"></span>'+c.n+
+        ' <b>'+(V.sw<=R.length?c.aft:c.now)+'%</b> · 비중 '+c.mix+'% · '+money(last.byCat[i])+'</span>';
+    }).join("");
+
+    // ---- 흑자 조건 ----
+    var tgt=Math.min(R.length, Math.max(V.sw, 12));   // 전환 후가 포함되는 기준 월
+    $("#noteSolve").textContent=tgt+"개월차 기준 · 월 "+PL+" 0이 되는 값";
+    function opAt(ov){ var r=compute(ov).rows; return r[tgt-1].op; }
+    function solve(key,lo,hi,dir){   // dir=+1이면 올릴수록 좋아짐
+      if(opAt({})>0) return null;    // 이미 흑자
+      var a=lo,b=hi;
+      if(dir>0){ if(opAt(kv(key,hi))<=0) return "range"; }
+      else { if(opAt(kv(key,lo))<=0) return "range"; }
+      for(var i=0;i<40;i++){
+        var mid=(a+b)/2, v=opAt(kv(key,mid));
+        if(dir>0){ if(v>0) b=mid; else a=mid; } else { if(v>0) a=mid; else b=mid; }
+      }
+      return (a+b)/2;
+    }
+    function kv(k,v){ var o={}; o[k]=v; return o; }
+    function need(label,cur,val,fmt,unit){
+      var txt = val===null ? "이미 흑자" : (val==="range" ? "범위 밖" : fmt(val));
+      var cls = val===null ? "pos" : (val==="range" ? "neg" : "");
+      return '<div class="stat"><span class="who">'+label+'</span>'+
+        '<span class="big '+cls+'" style="font-size:24px">'+txt+'</span>'+
+        '<span class="sub">현재 '+cur+'</span></div>';
+    }
+    var sConv=solve("conv",V.conv,30,1), sAov=solve("aov",V.aov,400000,1), sFix=solve("fixed",0,V.fixed,-1);
+    $("#solve").innerHTML=
+      need("필요 구매 전환율", pct(V.conv/100), sConv, function(v){return v.toFixed(1)+"%"}) +
+      need("필요 객단가", cnt(V.aov)+"원", sAov, function(v){return cnt(Math.ceil(v/1000)*1000)+"원"}) +
+      need("허용 월 고정비", money(V.fixed)+"원", sFix, function(v){return money(Math.floor(v/100000)*100000)+"원"});
+
+    var head='<thead><tr><th>개월</th><th>유저</th><th>구매자</th><th>주문</th><th>GMV</th><th>요율</th><th>수수료 매출</th><th>PG</th><th>포인트</th><th>기존P</th><th>고정비</th><th>'+PL+'</th><th>누적</th></tr></thead>';
+    var body=R.map(function(r){
+      var mark=(r.t===V.sw||r.t===6||r.t===12||r.t===R.length)?' class="mark"':'';
+      return '<tr'+mark+'><td>'+r.t+'</td><td>'+cnt(r.users)+'</td><td>'+cnt(r.buyers)+'</td><td>'+cnt(r.orders)+
+        '</td><td>'+money(r.gmv)+'</td><td>'+pct(r.rate)+'</td><td>'+money(r.fee)+'</td><td>'+money(-r.pgCost)+
+        '</td><td>'+money(-r.ptCost)+'</td><td>'+money(-r.legacy)+'</td><td>'+money(-V.fixed)+'</td><td class="'+(r.op<0?"neg":"pos")+'">'+money(r.op)+
+        '</td><td class="'+(r.cum<0?"neg":"pos")+'">'+money(r.cum)+'</td></tr>';
+    }).join("");
+    $("#tbl").innerHTML=head+'<tbody>'+body+'</tbody>';
+  }
+
+  syncAll(); render();
+})();
+</script>
+</body>
+</html>

@@ -131,6 +131,12 @@ section{background:var(--surface);border:1px solid var(--line);border-radius:6px
 .stat .big{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:30px;font-weight:600;
   line-height:1.15;letter-spacing:-.02em}
 .stat .sub{font-size:14px;color:var(--ink-2);line-height:1.5}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;margin:4px 0 6px}
+.duo .k{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;color:var(--ink-3);
+  white-space:nowrap;margin-bottom:1px}
+.duo .v{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:26px;font-weight:600;
+  line-height:1.15;letter-spacing:-.02em;white-space:nowrap}
+@media (max-width:1180px){.duo .v{font-size:23px}}
 .stat .sub b{font-family:var(--mono);font-weight:600;color:var(--ink)}
 .pos{color:var(--pos)} .neg{color:var(--neg)}
 
@@ -494,10 +500,13 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
     var m6=pick(5), m12=pick(11), m24=R[R.length-1];
     function card(t,r){
       return '<div class="stat"><span class="who">'+t+'</span>'+
-        '<span class="big '+(r.op<0?"neg":"pos")+'">'+money(r.op)+'</span>'+
+        '<div class="duo">'+
+          '<div><div class="k">월 수수료 매출</div><div class="v">'+money(r.fee)+'원</div></div>'+
+          '<div><div class="k">월 '+PL+'</div><div class="v '+(r.op<0?"neg":"pos")+'">'+money(r.op)+'원</div></div>'+
+        '</div>'+
         '<span class="sub">활성 유저 <b>'+cnt(r.users)+'</b>명 · 월 주문 <b>'+cnt(r.orders)+'</b>건<br>'+
-        'GMV <b>'+money(r.gmv)+'</b> · 수수료 매출 <b>'+money(r.fee)+'</b> (요율 '+pct(r.rate)+')<br>'+
-        '누적 <b class="'+(r.cum<0?"neg":"pos")+'">'+money(r.cum)+'</b></span></div>';
+        'GMV <b>'+money(r.gmv)+'원</b> · 요율 <b>'+pct(r.rate)+'</b><br>'+
+        '누적 '+PL+' <b class="'+(r.cum<0?"neg":"pos")+'">'+money(r.cum)+'원</b></span></div>';
     }
     $("#stats").innerHTML=card("6개월차",m6)+card("12개월차",m12)+(R.length+"개월차"?card(R.length+"개월차",m24):"");
 

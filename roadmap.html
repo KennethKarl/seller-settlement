@@ -169,6 +169,15 @@ svg{display:block;width:100%;height:auto}
 .memos h3{font-size:13px;font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase;
   color:var(--accent);margin:0 0 8px;font-weight:500}
 .memos .blk+.blk{margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}
+.lead{margin:0 0 16px;font-size:14.5px;color:var(--ink-2);line-height:1.7}
+.lead b{color:var(--ink);font-weight:600}
+#lvrTbl{min-width:860px}
+#lvrTbl tr.grp-row td{background:var(--surface-2);font-family:var(--mono);font-size:11px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:500;text-align:left}
+#lvrTbl td.how{font-family:var(--sans);white-space:normal;min-width:21ch;font-size:13.5px}
+#lvrTbl td.how small{display:block;color:var(--ink-3);font-size:12px;line-height:1.5;margin-top:2px}
+#lvrTbl td.lvr{font-family:var(--sans);white-space:normal;min-width:15ch;font-size:13px;color:var(--ink-2)}
+#lvrTbl tr.combo td{background:var(--accent-soft);font-weight:600}
 footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-family:var(--mono)}
 </style>
 </head>
@@ -246,6 +255,30 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
       <section>
         <div class="sec-head"><h2>월별 상세</h2><span class="note">전환 시점과 6·12·24개월이 강조됩니다</span></div>
         <div class="sec-body"><div class="scrollx"><table class="tbl" id="tbl"></table></div></div>
+      </section>
+
+      <section>
+        <div class="sec-head"><h2>이익·매출을 늘리는 방법</h2>
+          <span class="note" id="noteLvr"></span></div>
+        <div class="sec-body">
+          <p class="lead">위 표의 손익을 끌어올릴 레버를 <b>하나씩만</b> 움직여 계산했습니다. 「흑자 조건」이 손익을 0으로 만드는 값을 <b>역산</b>한다면, 여기는 <b>현실적으로 당길 수 있는 폭</b>을 넣고 그때 얼마가 더 남는지를 봅니다. 좌측 가정값을 바꾸면 이 표도 같이 다시 계산됩니다.</p>
+          <div class="scrollx" style="max-height:none"><table class="tbl" id="lvrTbl"></table></div>
+          <div class="alerts" id="lvrNotes" style="margin:18px 0 0"></div>
+          <div class="memos" style="margin-top:24px">
+            <div class="blk">
+              <h3>모델 밖에 있는 방법</h3>
+              <ul>
+                <li><b>광고 · 노출 상품 (CPC · 기획전 참여비).</b> 수수료는 GMV에 비례하지만 광고는 <b>셀러 수와 경쟁 강도</b>에 비례합니다. 요율 저항이 가장 큰 사료에서 요율 대신 꺼낼 수 있는 카드이고, 위 표에 없는 별도 매출 줄입니다.</li>
+                <li><b>쿠폰 재원 셀러 분담 · 입점 프로모션 분담금.</b> 프로모션 비용을 플랫폼이 전액 부담하지 않는 구조입니다. 손익에 미치는 효과는 위 표의 「포인트 지급률 인하」와 같은 자리에 들어옵니다.</li>
+                <li><b>직매입 · PB.</b> 마진율이 수수료율의 3~5배지만 재고 · 유통기한 · 반품 리스크를 플랫폼이 집니다. 요율이 가장 높게 잡히는 건기식이 후보이나, 같은 이유로 규제 · 표시광고 관리 비용이 함께 붙습니다.</li>
+                <li><b>풀필먼트 · 배송 마크업.</b> 지금 배송비는 전액 셀러와 고객 사이에 있어 플랫폼 기여가 0입니다. 물류를 끼면 배송비가 <b>PG 부과 대상(비용)에서 매출 줄로</b> 옮겨옵니다.</li>
+                <li><b>정기배송 · 멤버십 구독.</b> 사료 반복구매가 근거입니다. <b>구매자당 월 주문과 이탈률을 동시에</b> 건드리는 유일한 레버라 위 표에서 효율이 가장 좋고, 구독료 자체는 GMV와 무관한 고정 매출입니다.</li>
+                <li><b>결제 구조 개선.</b> PG 요율 재협상, 계좌이체 · 간편결제 유도, 계약서 VAT 표기 확인. 개발이 거의 없고 협의로 끝나므로 <b>가장 먼저 집행할 수 있는</b> 레버입니다.</li>
+                <li><b>카테고리 믹스 설계.</b> 요율을 올리지 않고도 가중평균 요율이 올라갑니다. 실행 방법은 입점 MD 목표를 GMV가 아니라 <b>요율 높은 카테고리의 GMV</b>로 주는 것입니다.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section>
@@ -572,6 +605,99 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
         '</td><td class="'+(r.cum<0?"neg":"pos")+'">'+money(r.cum)+'</td></tr>';
     }).join("");
     $("#tbl").innerHTML=head+'<tbody>'+body+'</tbody>';
+
+    // ---- 이익·매출 레버 ----
+    function altOv(ov){ return compute(ov); }
+    function altCat(mut){                       // 카테고리 표를 임시로 바꿔 계산 후 원복
+      var snap=C.map(function(c){return {mix:c.mix,now:c.now,aft:c.aft}});
+      mut(C);
+      var r=compute();
+      C.forEach(function(c,i){c.mix=snap[i].mix;c.now=snap[i].now;c.aft=snap[i].aft;});
+      return r;
+    }
+    function byk(k){ for(var i=0;i<C.length;i++) if(C[i].k===k) return C[i]; return null; }
+    var b0=R[tgt-1], bEnd=R[R.length-1];
+    function diff(alt){
+      var a=alt.rows[tgt-1], e=alt.rows[alt.rows.length-1];
+      return {gmv:a.gmv-b0.gmv, fee:a.fee-b0.fee, op:a.op-b0.op, cum:e.cum-bEnd.cum};
+    }
+    function dl(x){
+      if(Math.abs(x)<1) return '<span style="color:var(--ink-3)">—</span>';
+      return '<span class="'+(x>0?"pos":"neg")+'">'+(x>0?"+":"−")+money(Math.abs(x))+'</span>';
+    }
+    var feed=byk("feed"), supp=byk("supp"), shiftOk=feed&&supp&&feed.mix>=5;
+    var LV=[
+      {g:"수요 · GMV를 키운다"},
+      {h:"커머스 진입 동선을 앱 메인으로 올리고 구매 유도 푸시를 돌린다",
+       s:"가장 큰 레버지만 유일하게 미검증 가정 위에 있습니다",
+       l:"구매 전환율 "+V.conv+"% → "+(V.conv+0.5)+"%", d:diff(altOv({conv:V.conv+0.5}))},
+      {h:"재구매 리마인드 · 정기배송으로 한 달에 두 번 사게 만든다",
+       l:"구매자당 월 주문 "+V.opb+"건 → "+(V.opb+0.2).toFixed(1)+"건", d:diff(altOv({opb:V.opb+0.2}))},
+      {h:"묶음 구성 · 무료배송 임계선 · 연관 추천으로 장바구니를 키운다",
+       l:"평균 객단가 "+cnt(V.aov)+"원 → "+cnt(V.aov+3000)+"원", d:diff(altOv({aov:V.aov+3000}))},
+      {h:"가입 첫 달 온보딩을 고쳐 이탈 지점을 통과시킨다",
+       s:"70%가 빠지는 구간이라 여기가 가장 개선 여지가 큽니다",
+       l:"신규 활성화율 "+V.actRate+"% → "+(V.actRate+10)+"%", d:diff(altOv({actRate:Math.min(100,V.actRate+10)}))},
+      {h:"기존 유저 유지 — 리텐션 캠페인으로 이탈을 늦춘다",
+       s:"월 효과는 작지만 유일하게 시간이 지날수록 커집니다",
+       l:"월 이탈률 "+V.churn+"% → "+Math.max(0,V.churn-0.5)+"%", d:diff(altOv({churn:Math.max(0,V.churn-0.5)}))},
+      {h:"커머스를 쓸 활성 유저 자체를 늘린다",
+       l:"활성 유저 +1만 명", d:diff(altOv({mau:V.mau+10000}))},
+      {g:"요율 · 같은 주문에서 더 받는다"},
+      {h:"전환 후 요율을 전 카테고리 1pp씩 더 올린다",
+       s:"셀러 이탈은 모델에 없습니다 — 저항이 가장 큰 방법입니다",
+       l:"가중평균 "+pct(m.rAft)+" → "+pct(m.rAft+0.01), d:diff(altCat(function(cs){cs.forEach(function(c){c.aft=Math.min(100,c.aft+1)})}))}
+    ];
+    if(shiftOk) LV.push({h:"입점 MD 목표를 요율 높은 카테고리로 돌려 믹스를 바꾼다",
+       s:"요율을 한 곳도 올리지 않고 가중평균만 올립니다",
+       l:"사료 비중 −5pp → 건기식 +5pp",
+       d:diff(altCat(function(){feed.mix-=5; supp.mix+=5;}))});
+    if(V.sw>1) LV.push({h:"차등 요율 전환 시점을 앞당긴다",
+       s:"기준월은 이미 전환 후라 월 증분은 0 — 효과는 전부 누적에 잡힙니다",
+       l:V.sw+"개월차 → "+Math.max(1,V.sw-3)+"개월차", d:diff(altOv({sw:Math.max(1,V.sw-3)}))});
+    LV.push({g:"비용 · 나가는 돈을 줄인다"});
+    LV.push({h:"PG 요율을 재협상한다",
+       s:"개발 없이 협의로 끝나 가장 먼저 집행할 수 있습니다",
+       l:"PG "+V.pg+"% → "+Math.max(0,V.pg-0.3).toFixed(1)+"%", d:diff(altOv({pg:Math.max(0,V.pg-0.3)}))});
+    LV.push({h:"플랫폼 부담 적립 포인트를 줄이거나 셀러 분담으로 넘긴다",
+       l:"포인트 지급률 "+V.ptCost+"% → "+Math.max(0,V.ptCost-1)+"%", d:diff(altOv({ptCost:Math.max(0,V.ptCost-1)}))});
+    LV.push({h:"포인트 · 간편결제 비중을 올려 PG 부과 대상을 줄인다",
+       s:"포인트 지급 비용이 함께 늘지 않는다는 전제입니다",
+       l:"포인트 결제 비중 "+V.ptShare+"% → "+(V.ptShare+5)+"%", d:diff(altOv({ptShare:Math.min(100,V.ptShare+5)}))});
+    // 조합: 수요 3종 + 요율 1pp 동시
+    var combo=(function(){
+      var snap=C.map(function(c){return {mix:c.mix,now:c.now,aft:c.aft}});
+      C.forEach(function(c){c.aft=Math.min(100,c.aft+1)});
+      var a=compute({conv:V.conv+0.5, opb:V.opb+0.2, aov:V.aov+3000});
+      C.forEach(function(c,i){c.mix=snap[i].mix;c.now=snap[i].now;c.aft=snap[i].aft;});
+      return {gmv:a.rows[tgt-1].gmv-b0.gmv, fee:a.rows[tgt-1].fee-b0.fee,
+              op:a.rows[tgt-1].op-b0.op, cum:a.rows[a.rows.length-1].cum-bEnd.cum};
+    })();
+
+    $("#noteLvr").textContent=tgt+"개월차 기준 · 하나만 움직였을 때의 증분";
+    var lh='<thead><tr><th>방법</th><th>움직이는 값</th><th>월 GMV</th><th>월 수수료 매출</th><th>월 '+PL+'</th><th>기간 누적</th></tr></thead>';
+    var lb=LV.map(function(x){
+      if(x.g) return '<tr class="grp-row"><td colspan="6">'+x.g+'</td></tr>';
+      return '<tr><td class="how">'+x.h+(x.s?'<small>'+x.s+'</small>':'')+'</td><td class="lvr">'+x.l+'</td>'+
+        '<td>'+dl(x.d.gmv)+'</td><td>'+dl(x.d.fee)+'</td><td>'+dl(x.d.op)+'</td><td>'+dl(x.d.cum)+'</td></tr>';
+    }).join("");
+    lb+='<tr class="combo"><td class="how">위 수요 3종 + 요율 1pp를 동시에<small>레버는 더하기가 아니라 곱으로 작용합니다</small></td>'+
+        '<td class="lvr">전환율 · 주문수 · 객단가 · 요율</td><td>'+dl(combo.gmv)+'</td><td>'+dl(combo.fee)+'</td>'+
+        '<td>'+dl(combo.op)+'</td><td>'+dl(combo.cum)+'</td></tr>';
+    $("#lvrTbl").innerHTML=lh+'<tbody>'+lb+'</tbody>';
+
+    var singles=LV.filter(function(x){return !x.g});
+    var best=singles.slice().sort(function(a,b){return b.d.op-a.d.op})[0];
+    var sumParts=[{conv:V.conv+0.5},{opb:V.opb+0.2},{aov:V.aov+3000}]
+      .reduce(function(a,ov){return a+diff(altOv(ov)).op},0)
+      + diff(altCat(function(cs){cs.forEach(function(c){c.aft=Math.min(100,c.aft+1)})})).op;
+    var shipD=diff(altOv({ship:V.ship+1000}));
+    var ln=[];
+    ln.push('<div class="alert"><b>이 가정에서 가장 큰 단일 레버는 「'+best.l+'」입니다.</b> '+tgt+'개월차 월 '+PL+'이 <span class="num">'+money(best.d.op)+'</span>원 늘고, 기간 누적으로는 <span class="num">'+money(best.d.cum)+'</span>원 차이가 납니다.</div>');
+    ln.push('<div class="alert"><b>레버는 곱으로 작용합니다.</b> 수요 3종과 요율을 따로 당긴 효과를 단순히 더하면 <span class="num">'+money(sumParts)+'</span>원이지만, 같이 당기면 <span class="num">'+money(combo.op)+'</span>원입니다 — <b>'+money(combo.op-sumParts)+'원</b>이 교차항에서 나옵니다. 큰 레버 하나보다 <b>작은 레버 세 개를 같이</b> 움직이는 편이 유리합니다.</div>');
+    ln.push('<div class="alert warn"><b>배송비 인상은 이익 레버가 아닙니다.</b> 배송비는 플랫폼 매출이 아니라 PG 부과 대상만 늘립니다. 건당 1,000원을 올리면 월 '+PL+'이 <span class="num">'+money(Math.abs(shipD.op))+'</span>원 <b>줄어듭니다</b>. 배송비로 돈을 벌려면 물류를 직접 끼는 구조가 먼저 필요합니다.</div>');
+    ln.push('<div class="alert bad"><b>이 표의 숫자는 상한입니다.</b> 요율 인상에 따른 <b>셀러 이탈</b>, 포인트 축소에 따른 <b>구매 전환 하락</b>, 마케팅 없이 전환율이 오른다는 전제 — 셋 다 모델에 들어 있지 않습니다. 보고에서는 <b>"레버별 최대 기여"</b>로 말하고, 실행 순서는 저항이 낮은 비용 레버부터 잡는 것이 안전합니다.</div>');
+    $("#lvrNotes").innerHTML=ln.join("");
   }
 
   syncAll(); render();

@@ -332,7 +332,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
                 <li><b class="hl">직매입 · PB.</b> 마진율이 수수료율의 3~5배지만 재고 · 유통기한 · 반품 리스크를 플랫폼이 집니다. 요율이 가장 높게 잡히는 건기식이 후보이나, 같은 이유로 규제 · 표시광고 관리 비용이 함께 붙습니다.</li>
                 <li><b class="hl">풀필먼트 · 배송 마크업.</b> 지금 배송비는 전액 셀러와 고객 사이에 있어 플랫폼 기여가 0입니다. 물류를 끼면 배송비가 <b>PG 부과 대상(비용)에서 매출 줄로</b> 옮겨옵니다.</li>
                 <li><b class="hl">정기배송 · 멤버십 구독.</b> 사료 반복구매가 근거입니다. <b>구매자당 월 주문과 이탈률을 동시에</b> 건드리는 유일한 레버라 위 표에서 효율이 가장 좋고, 구독료 자체는 GMV와 무관한 고정 매출입니다.</li>
-                <li><b class="hl">결제 구조 개선.</b> PG 요율 재협상, 계좌이체 · 간편결제 유도, 계약서 VAT 표기 확인. 개발이 거의 없고 협의로 끝나므로 <b>가장 먼저 집행할 수 있는</b> 레버입니다.</li>
+                <li><b class="hl">결제 구조 개선.</b> PG 요율 재협상, 계좌이체 · 저요율 간편결제(PAYCO · 카카오페이 · SSGPAY · SK pay 2.3%) 유도. 계약서 VAT 표기는 별도로 확인됐습니다. 개발이 거의 없고 협의로 끝나므로 <b>가장 먼저 집행할 수 있는</b> 레버입니다.</li>
                 <li><b class="hl">카테고리 믹스 설계.</b> 요율을 올리지 않고도 가중평균 요율이 올라갑니다. 실행 방법은 입점 MD 목표를 GMV가 아니라 <b>요율 높은 카테고리의 GMV</b>로 주는 것입니다.</li>
               </ul>
             </div>
@@ -367,7 +367,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
           <div class="blk">
             <h3>비용</h3>
             <ul>
-              <li><b>PG 요율</b>이 손익에 크게 작용합니다. 계약이 VAT 별도 표기라면 입력값에 1.1을 곱해 넣어야 실제 지출과 맞습니다.</li>
+              <li><b>PG 요율</b>이 손익에 크게 작용합니다. KISPG 계약서 일반 구간은 <b>카드 2.3%(VAT 별도)</b>이고, 간편결제는 수단별로 2.3~2.6%입니다(삼성 · 애플페이가 2.6%로 가장 비쌉니다). 카카오페이 머니 · 네이버페이 포인트 요율은 아직 받지 못했습니다. 매입세액은 공제되므로 손익에는 공급가만 반영합니다.</li>
               <li><b>증분 고정비는 0으로 두었습니다.</b> 커머스를 기존 인력으로 진행한다는 전제입니다. 따라서 화면의 숫자는 <b>공헌이익</b>이며 인건비를 배부한 영업이익이 아닙니다. 대표 보고에서 둘을 섞어 말하면 나중에 문제가 되므로 <b>"증분 비용 없이 이만큼 남는다"</b>로 표현하는 것이 정확합니다. 전담 인력을 새로 뽑는 시점에 그 비용을 넣어 다시 보십시오.</li>
               <li><b>포인트 지급률</b>은 GMV 대비 플랫폼이 부담하는 포인트입니다. 리뷰포인트 중 셀러 부담분은 예수금이라 여기서 빠집니다.</li>
               <li><b>기존 적립 포인트 9,200만 P는 손익에서 제외했습니다.</b> 6개월 유효기간으로 소멸되므로 부채로 잡지 않는다는 방침입니다. 다만 <b>오픈 시점에 유효기간이 실제로 적용되고 있는지는 확인이 필요합니다</b> — 적용 전에 커머스 결제를 열면 환산 현금가치 약 6,133만원이 그대로 나갑니다. 좌측 「월 소진율」을 올리면 그 경우를 볼 수 있습니다.</li>
@@ -401,7 +401,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
   }
 
   var BASE={signups:660814, mau:122028, newSignup:19699, actRate:37, churn:6.2, conv:2, opb:1.3,
-            aov:25000, ship:3000, ptShare:5, ptCost:2, pg:4.5, vat:10,
+            aov:25000, ship:3000, ptShare:5, ptCost:2, pg:2.3, vat:10,
             ptBal:92000000, ptRate:1.5, ptBurn:0,
             fixed:0, months:24, sw:7};
   var CATS=[
@@ -431,10 +431,9 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
     {id:"ptRate",label:"포인트 환산비율",min:1,max:5,step:0.1,unit:"P = 1원"},
     {id:"ptBurn",label:"월 소진율",min:0,max:30,step:0.5,unit:"%",help:"<b>기본 0%</b> — 소멸 전제로 제외. 유효기간 집행이 늦어져 실제로 쓰이는 경우를 보려면 올려보십시오"},
     {grp:"비용"},
-    {id:"pg",label:"PG 결제수수료율",min:0,max:8,step:0.1,unit:"%",help:"고객 실결제액 기준 · 계약이 VAT 별도라면 1.1을 곱해 넣으십시오"},
+    {id:"pg",label:"PG 결제수수료율",min:0,max:8,step:0.1,unit:"%",help:"고객 실결제액 기준 · 계약서 표기대로 <b>VAT 별도</b> 요율을 넣는다. KISPG 카드 2.3%, 간편결제는 수단별 2.3~2.6%"},
     {id:"ptCost",label:"포인트 지급률",min:0,max:15,step:0.5,unit:"%",help:"GMV 대비 플랫폼 부담분. 셀러 부담 리뷰포인트는 예수금이라 제외"},
     {id:"fixed",label:"증분 고정비 (월)",min:0,max:300000000,step:1000000,unit:"원",help:"<b>기존 인력으로 진행하면 0입니다.</b> 0이면 화면의 숫자는 영업이익이 아니라 <b>공헌이익</b>(수수료 매출 − PG − 포인트)입니다. 전담 인력을 새로 뽑는다면 그 비용만 넣으십시오"},
-    {id:"vat",label:"부가세율",min:0,max:20,step:1,unit:"%"},
     {grp:"기간"},
     {id:"months",label:"전망 기간",min:6,max:36,step:1,unit:"개월"}
   ];
@@ -494,7 +493,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
     var mixSum=C.reduce(function(a,c){return a+c.mix},0) || 1;
     var rNow=C.reduce(function(a,c){return a+c.mix*c.now},0)/mixSum/100;
     var rAft=C.reduce(function(a,c){return a+c.mix*c.aft},0)/mixSum/100;
-    var vat=V.vat/100, pg=V.pg/100;
+    var pg=V.pg/100;
     var rows=[], users=V.mau, cum=0, bepMonth=null, firstPos=null;
     var bal=V.ptBal/(V.ptRate>0?V.ptRate:1);      // 기존 포인트 현금 환산 잔액
     for(var t=1;t<=V.months;t++){
@@ -506,7 +505,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
       var rate=after?rAft:rNow;
       var fee=gmv*rate;                                  // 공급가 기준 수수료 매출
       var paid=gmv*(1-V.ptShare/100)+orders*V.ship;      // 고객 실결제 (PG 부과 대상)
-      var pgCost=paid*pg/(1+vat);                        // 공급가 기준
+      var pgCost=paid*pg;                                // 공급가 기준 — 요율이 VAT 별도라 그대로 쓴다
       var ptCost=gmv*V.ptCost/100;
       var legacy=Math.min(bal, bal*V.ptBurn/100);   // 기존 포인트 사용 → 셀러 보전 현금
       bal-=legacy;

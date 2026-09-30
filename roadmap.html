@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <meta name="color-scheme" content="light dark">
-<title>수수료 전환 로드맵</title>
+<title>커머스 장기 로드맵</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600&display=swap">
@@ -192,17 +192,25 @@ b.wn{color:var(--warn);font-weight:600}
 #lvrTbl tr.top td.how{background:color-mix(in srgb,var(--hl) 4%,var(--surface))}
 .rk{display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;font-weight:600;
   color:var(--on-hl);background:var(--hl);border-radius:3px;padding:1px 5px;margin-right:6px;vertical-align:2px}
-#lvrNotes .num{font-weight:600;color:var(--hl)}
+#lvrNotes .num,#kalerts .num{font-weight:600;color:var(--hl)}
+#kTbl{min-width:760px}
+#kTbl td.how,#kProof td.how{font-family:var(--sans);white-space:normal;min-width:20ch;font-size:13.5px;font-weight:600}
+#kTbl td.how small{display:block;color:var(--ink-3);font-size:12px;line-height:1.5;margin-top:2px;font-weight:400}
+#kTbl td.how.rd{color:var(--neg)}
+#kTbl th.op,#kProof th.op{background:color-mix(in srgb,var(--hl) 8%,var(--surface-3));color:var(--hl);font-weight:600}
+#kTbl td.op,#kProof td.op{background:color-mix(in srgb,var(--hl) 7%,var(--surface));font-weight:700;font-size:14.5px}
+#kTbl tr.top td.how{background:color-mix(in srgb,var(--hl) 4%,var(--surface))}
+#kstats .stat .big{font-size:25px;white-space:nowrap}
 footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-family:var(--mono)}
 </style>
 </head>
 <body>
 <div class="page">
   <header class="masthead">
-    <p class="eyebrow">대표 보고 · 수수료 정책</p>
-    <h1>수수료 전환 로드맵</h1>
-    <p class="dek">현재 9% 단일 요율로 출발해 <b>6개월 뒤 카테고리별 차등 요율(평균 15%)</b>로 전환했을 때, 유저·주문·손익이 24개월간 어떻게 움직이는지 계산합니다. 모든 값은 좌측에서 바꿀 수 있습니다.</p>
-    <p class="srcline">건당 정산 구조는 <a href="./">셀러 정산 마진 시뮬레이터</a>에서 확인 · 아래 수치는 전부 가정값이며 근거는 「가정과 확인 필요」 참조</p>
+    <p class="eyebrow">대표 보고 · 인투펫 커머스</p>
+    <h1>커머스 장기 로드맵</h1>
+    <p class="dek">커머스가 태울 수 있는 모수에는 <b>천장(Carrying Capacity)</b>이 있습니다. 그 천장을 코호트 리텐션 실측으로 먼저 구하고, 그 안에서 <b>9% 단일 요율 → 6개월 뒤 카테고리별 차등 요율(평균 15%)</b> 전환이 유저·주문·손익을 24개월간 어떻게 움직이는지 계산합니다. 모든 값은 좌측에서 바꿀 수 있습니다.</p>
+    <p class="srcline">건당 정산 구조는 <a href="./">셀러 정산 마진 시뮬레이터</a>에서 확인 · 유저 파라미터는 2025-08~2026-08 코호트 리텐션 <b>실측</b>, 나머지는 가정값 — 근거는 「가정과 확인 필요」 참조</p>
   </header>
 
   <div class="layout">
@@ -224,6 +232,41 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
 
     <main class="results">
       <section aria-label="시점별 요약"><div class="stats" id="stats"></div></section>
+
+      <section>
+        <div class="sec-head"><h2>성장 한계 · Carrying Capacity</h2>
+          <span class="note" id="noteK"></span></div>
+        <div class="sec-body">
+          <p class="lead">커머스가 태울 수 있는 모수는 누적 가입자가 아니라 <b>활성 유저(MAU)</b>입니다. 그리고 MAU는 무한히 늘지 않고 <b>한 점으로 수렴</b>합니다 — 매달 들어오는 신규와 매달 빠지는 이탈이 같아지는 지점입니다. 이 값을 <b class="hl">K</b>라고 부르며, 아래 로드맵의 모든 숫자는 이 천장 아래에서만 성립합니다.</p>
+          <div class="stats" id="kstats"></div>
+          <div class="alerts" id="kalerts" style="margin:18px 0 0"></div>
+          <div class="memos" style="margin-top:24px">
+            <div class="blk">
+              <h3>36개월 시나리오</h3>
+              <p class="lead" style="margin:0 0 12px">좌측 가정값을 바꾸면 이 표도 같이 다시 계산됩니다. <b>수렴 K</b>는 그 시나리오가 결국 도달하는 MAU이고, 신규가 매달 줄어드는 시나리오에는 수렴점이 없습니다.</p>
+              <div class="scrollx" style="max-height:none"><table class="tbl" id="kTbl"></table></div>
+            </div>
+            <div class="blk">
+              <h3>3월 캠페인이 K를 이미 증명했습니다</h3>
+              <p class="lead" style="margin:0 0 12px">2026년 3월에 신규 가입을 평소의 2배(38,913명)로 밀어넣어 MAU를 K의 121%까지 띄웠지만, <b>3개월 만에 정확히 K 선으로 되돌아왔습니다.</b> 물통에 물을 부어도 구멍 크기가 같으면 수위가 돌아오는 것과 같습니다.</p>
+              <div class="scrollx" style="max-height:none"><table class="tbl" id="kProof" style="min-width:560px"></table></div>
+              <ul style="margin-top:14px">
+                <li><b class="hl">마케팅으로 만든 MAU는 빌린 것입니다.</b> 캠페인 예산으로 커머스 모수를 키우는 계획은 예산이 끊기는 달에 같이 끊깁니다.</li>
+                <li><b class="hl">「가입자 100만 돌파」는 커머스 모수가 아닙니다.</b> 현상유지로도 24개월 뒤 가입자는 113만 명이 되지만 MAU는 12만에서 멈추고, 활성률은 18.5% → 10.6%로 떨어집니다.</li>
+              </ul>
+            </div>
+            <div class="blk">
+              <h3>커머스에 주는 함의</h3>
+              <ul>
+                <li><b class="hl">K = 월 신규 × 생애 활성개월.</b> 두 항 모두 선형이라 어느 쪽을 당겨도 같은 비율로 늘어나지만, <b>신규는 매달 돈을 써야 유지되고 리텐션은 한 번 고치면 영구</b>입니다. 같은 +22%를 만드는 비용이 다릅니다.</li>
+                <li><b class="hl">M1이 유일한 진짜 병목입니다.</b> 가입자 10명 중 6.3명이 두 번째 달에 오지 않습니다. 커머스는 이 구멍을 막는 수단이기도 합니다 — 포인트 적립은 월 1,116만 P인데 사용은 151만 P(13.5%)이고 998만 P가 소멸합니다. <b>쓸 곳이 없어서 재방문 동기가 안 생기는 상태</b>입니다.</li>
+                <li><b class="hl">탈퇴율 지표로는 아무것도 못 잡습니다.</b> 공식 탈퇴는 월 300~400명인데 실질 비활성은 월 1.8만 명입니다. 50배 차이이므로 이탈 모니터링은 탈퇴가 아니라 <b>코호트 M1 잔존율</b>로 걸어야 합니다.</li>
+                <li><b class="hl">지금 추세는 B 시나리오 쪽입니다.</b> 알림톡 발송이 7개월간 −19.3%(−3.0%/월)이고, 발송→가입 전환율은 4.18%→6.15%로 방어 중이지만 유입 모수 자체가 줄고 있습니다. <b>커머스 오픈 시점이 늦어질수록 태울 모수가 작아집니다.</b></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <section>
         <div class="sec-head"><h2 id="hOp">월 공헌이익</h2>
@@ -264,6 +307,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
         <div class="sec-body">
           <p style="margin:0 0 16px;font-size:14.5px;color:var(--ink-2);line-height:1.7">다른 값을 모두 고정한 채 <b>하나만</b> 움직여 그 달의 월 손익을 0으로 만드는 값입니다. 현실적으로 어느 레버를 당길 수 있는지 고르는 데 씁니다.</p>
           <div class="stats" id="solve" style="border:1px solid var(--line);border-radius:4px;overflow:hidden"></div>
+          <div class="alerts" id="solveK" style="margin:16px 0 0"></div>
         </div>
       </section>
 
@@ -303,9 +347,12 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
           <div class="blk">
             <h3>유저 · 전환</h3>
             <ul>
-              <li><b>현재 유저 33만 명</b>은 인투펫 앱 누적 가입자 기준입니다. 커머스 노출이 가능한 <b>활성 유저</b>가 몇 명인지가 실제 출발점이므로 이 값을 먼저 확정해야 합니다.</li>
-              <li><b>구매 전환율</b>은 월간 유저 대비 구매자 비율입니다. 오픈 초기 커머스는 1~3% 구간이 흔하지만, 기존 앱 트래픽을 그대로 태우는 경우 첫 달만 높게 튀고 빠르게 떨어집니다. <b>실측 전까지는 보수적으로 잡는 편이 안전합니다.</b></li>
-              <li><b>월 유입률과 이탈률</b>은 앱 전체 기준이 아니라 커머스를 쓸 유저 기준이어야 합니다.</li>
+              <li><b class="hl">유저 파라미터는 실측으로 교체했습니다.</b> 2025-08~2026-08 코호트 리텐션 13개월분과 2026년 월별 KPI에서 뽑았습니다 — MAU 122,028명(2026-08), 월 신규 19,699명(13개월 평균), M1 잔존율 36.9%, M1 이후 이탈률 6.2%. <b>이전 기본값이던 「월 신규 10,380명 · 이탈률 2%」는 실측과 맞지 않아 폐기했습니다</b> — 그 값으로는 K가 15.6만 명으로 나와 실제보다 32% 과대 추정됩니다.</li>
+              <li><b class="wn">이탈률 6.2%는 역산치입니다.</b> M8 이후 리텐션이 13%대에서 평평해 보이지만 이건 바닥이 아니라 <b>−4.5%/월로 새는 꼬리</b>입니다. 2025-08 이전 가입자 40만 명의 실제 활성률 추이가 있으면 직접 검증됩니다. 이 값이 −3%면 K는 13만, −6%면 10만으로 움직이는 <b>가장 민감한 파라미터</b>입니다.</li>
+              <li><b class="wn">GA MAU와 코호트의 분모가 다를 수 있습니다.</b> MAU는 GA 기준 앱 전체 트래픽이고 코호트는 가입자 재접속입니다. 비회원 트래픽이 섞여 있으면 K가 과대 추정되므로 <b>회원 MAU로 한 번 다시 돌려봐야</b> 합니다. 커머스 모수는 어차피 로그인 유저이므로 이 확인이 먼저입니다.</li>
+              <li><b>월 신규 19,699명에는 3월 캠페인(39,219명)이 들어 있습니다.</b> 빼면 18,072명이고 K는 약 10.8만 명으로 내려가 <b>현재 MAU보다 낮아집니다</b> — 즉 캠페인을 반복하지 않는 전제에서는 이미 감소 국면입니다. 위 시나리오 C에서 확인하십시오.</li>
+              <li><b>구매 전환율 2%와 구매자당 월 주문 1.3건은 여전히 미검증 가정입니다.</b> 오픈 초기 커머스는 1~3% 구간이 흔하지만, 기존 앱 트래픽을 그대로 태우면 첫 달만 높게 튀고 빠르게 떨어집니다. <b>실측 전까지는 보수적으로 잡는 편이 안전합니다.</b></li>
+              <li><b>이탈 모니터링 지표를 바꿔야 합니다.</b> 공식 탈퇴회원은 월 300~400명인데 실질 비활성은 월 1.8만 명입니다. 탈퇴율로는 아무것도 못 잡으므로 <b>코호트 M1 잔존율</b>을 주 지표로 걸고 매달 추적해야 합니다.</li>
             </ul>
           </div>
           <div class="blk">
@@ -332,7 +379,8 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
 
       <footer>
         금액은 원 단위 · 판매가는 VAT 포함 소비자가 · 수수료 매출은 공급가 기준(VAT 별도)입니다.<br>
-        이 페이지의 기본값은 전부 가정이며 실제 운영 수치가 아닙니다. 확정된 값은 좌측에 직접 입력해 쓰십시오.
+        유저 파라미터(MAU · 월 신규 · M1 잔존율 · 이탈률)는 2025-08~2026-08 코호트 리텐션 실측에서 산출했고, 주문 · 요율 · 비용 파라미터는 가정입니다.<br>
+        확정된 값은 좌측에 직접 입력해 쓰십시오.
       </footer>
     </main>
   </div>
@@ -352,7 +400,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
     return s+Math.round(a).toLocaleString("ko-KR");
   }
 
-  var BASE={signups:437000, mau:112619, newSignup:10380, actRate:30, churn:2, conv:2, opb:1.3,
+  var BASE={signups:660814, mau:122028, newSignup:19699, actRate:37, churn:6.2, conv:2, opb:1.3,
             aov:25000, ship:3000, ptShare:5, ptCost:2, pg:4.5, vat:10,
             ptBal:92000000, ptRate:1.5, ptBurn:0,
             fixed:0, months:24, sw:7};
@@ -365,11 +413,11 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
   ];
   var SPEC=[
     {grp:"유저 · 실측"},
-    {id:"signups",label:"누적 가입자",min:0,max:2000000,step:1000,unit:"명",help:"참고값. 계산에는 쓰지 않습니다 — 커머스가 붙는 모수는 아래 MAU입니다"},
-    {id:"mau",label:"활성 유저 (MAU)",min:0,max:1000000,step:1000,unit:"명",help:"GA4 28일 기준 실측. 대외로는 15만으로 말하지만 산출 정의가 미확정입니다"},
-    {id:"newSignup",label:"월 신규 가입",min:0,max:100000,step:500,unit:"명",help:"일 346명 × 30일. UV가 전 구간 마이너스인 감소 국면입니다"},
-    {id:"actRate",label:"신규 활성화율",min:0,max:100,step:5,unit:"%",help:"가입 후 첫 달 병원 연동 구간에서 70%가 이탈합니다. 넘어선 30%만 활성 유저로 잡습니다"},
-    {id:"churn",label:"월 이탈률",min:0,max:15,step:0.5,unit:"%",help:"첫 달을 넘긴 유저는 98%가 유지됩니다"},
+    {id:"signups",label:"누적 가입자",min:0,max:2000000,step:1000,unit:"명",help:"2026-08 실측 66만 명. <b>계산에는 쓰지 않습니다</b> — 커머스가 붙는 모수는 아래 MAU이고, 가입자는 늘어도 MAU는 K에서 멈춥니다"},
+    {id:"mau",label:"활성 유저 (MAU)",min:0,max:1000000,step:1000,unit:"명",help:"2026-08 GA 실측 122,028명. <b>출발점일 뿐이며 수렴점은 아래 K입니다.</b> GA MAU는 비회원 트래픽을 포함할 수 있어 회원 MAU로 재산출이 필요합니다"},
+    {id:"newSignup",label:"월 신규 가입",min:0,max:100000,step:1,unit:"명",help:"2025-08~2026-08 코호트 13개월 평균 19,699명. <b>3월 캠페인(39,219명)을 빼면 18,072명</b>입니다. 알림톡 발송이 −3.0%/월로 줄고 있어 이 값 자체가 하락 추세입니다"},
+    {id:"actRate",label:"M1 잔존율",min:0,max:100,step:0.5,unit:"%",help:"코호트 실측 평균 36.9%. 가입 당월(M0)은 99.9%가 쓰지만 <b>그 다음 달에 63%가 한 번에 빠집니다.</b> 전체 누수의 대부분이 이 한 곳에 몰려 있습니다"},
+    {id:"churn",label:"M1 이후 월 이탈률",min:0.5,max:20,step:0.1,unit:"%",help:"첫 달을 넘긴 유저의 이탈률. <b>2%가 아니라 6.2%입니다.</b> M8 이후 13%대가 바닥처럼 보이지만 실제로는 −4.5%/월로 새는 중이고, MAU 수지에서 역산한 블렌디드 이탈률 15.6%와 이 값이 서로 맞습니다"},
     {id:"conv",label:"월 구매 전환율",min:0,max:20,step:0.1,unit:"%",help:"<b>미검증 가정.</b> 활성 유저 중 그 달에 한 번이라도 구매한 비율"},
     {id:"opb",label:"구매자당 월 주문",min:0.5,max:6,step:0.1,unit:"건",help:"<b>미검증 가정</b>"},
     {grp:"주문"},
@@ -474,6 +522,85 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
     return {rows:rows,rNow:rNow,rAft:rAft,mixSum:mixSum,bepMonth:bepMonth,firstPos:firstPos,legacyTotal:V.ptBal/(V.ptRate>0?V.ptRate:1)};
   }
 
+  /* ---------- 성장 한계 (Carrying Capacity) ---------- */
+  // 모델 재귀식 users[t] = users[t-1]*(1-c) + N*a 의 정상상태 = N*a/c
+  // a/c 가 곧 가입 1명당 생애 활성개월(L)이다.
+  function kcap(OV){
+    var V=Object.assign({},window.__V,OV||{});
+    var a=V.actRate/100, c=V.churn/100, N=V.newSignup;
+    var L=c>0?a/c:Infinity, K=c>0?N*L:Infinity;
+    return {a:a,c:c,N:N,L:L,K:K,ratio:(isFinite(K)&&K>0)?V.mau/K:0};
+  }
+  function kSim(nMul,aMul,g,months){
+    var V=window.__V, u=V.mau, a=V.actRate/100*aMul, c=V.churn/100, out=[];
+    for(var t=1;t<=months;t++){ u=u*(1-c)+V.newSignup*nMul*Math.pow(1+g,t)*a; out.push(u); }
+    return out;
+  }
+  function renderK(){
+    var V=window.__V, k=kcap(), K=k.K, fin=isFinite(K)&&K>0;
+    $("#noteK").textContent="K = 월 신규 "+cnt(k.N)+"명 × 생애 활성 "+(fin?k.L.toFixed(2):"∞")+"개월";
+    function card(who,big,cls,sub){
+      return '<div class="stat"><span class="who">'+who+'</span><span class="big '+(cls||"")+'">'+big+
+             '</span><span class="sub">'+sub+'</span></div>';
+    }
+    var ordK=fin?K*V.conv/100*V.opb:0;
+    $("#kstats").innerHTML=
+      card("CARRYING CAPACITY K", fin?cnt(K)+"명":"∞", "",
+           "월 신규 <b>"+cnt(k.N)+"</b>명 × M1 잔존 <b>"+V.actRate+"%</b> ÷ 이탈 <b>"+V.churn+"%</b><br>생애 활성 <b>"+(fin?k.L.toFixed(2):"∞")+"</b>개월")+
+      card("현재 MAU / K", fin?pct(k.ratio,0):"—", (k.ratio>=0.98?"neg":"pos"),
+           "현재 <b>"+cnt(V.mau)+"</b>명 · 천장까지 <b>"+(fin?cnt(Math.max(0,K-V.mau)):"—")+"</b>명<br>"+
+           (k.ratio>=0.98?"이미 포화 — 모수를 더 태울 여지가 없습니다":"아직 여유가 있습니다"))+
+      card("K에서의 커머스 상한", fin?cnt(ordK)+"건":"—", "",
+           "월 주문 상한 · 전환 <b>"+V.conv+"%</b> × 구매자당 <b>"+V.opb+"</b>건<br>월 GMV <b>"+(fin?money(ordK*V.aov):"—")+"원</b>");
+
+    var ka=[];
+    if(!fin){ ka.push('<div class="alert bad"><b>이탈률이 0이면 K가 무한대가 됩니다.</b> 좌측 「M1 이후 월 이탈률」을 0보다 크게 두십시오.</div>'); }
+    else if(k.ratio>=0.98){
+      ka.push('<div class="alert bad"><b>이미 천장입니다.</b> 현재 MAU '+cnt(V.mau)+'명은 K '+cnt(K)+'명의 <span class="num">'+pct(k.ratio,0)+
+              '</span>입니다. 지금 구조에서는 마케팅으로 MAU를 밀어올려도 <b>2~3개월이면 되돌아옵니다.</b> 커머스 모수를 키우려면 물을 더 붓는 게 아니라 <b>M1 구멍을 막아야</b> 합니다.</div>');
+    } else {
+      ka.push('<div class="alert"><b>아직 K까지 '+cnt(K-V.mau)+'명 남았습니다.</b> 지금 구조를 유지하기만 해도 MAU는 '+cnt(K)+'명까지 자연 증가합니다.</div>');
+    }
+    ka.push('<div class="alert"><b>매달 '+cnt(k.N*k.a)+'명이 새로 자리잡고, K에서는 같은 수가 빠집니다.</b> K는 "성장이 멈췄다"가 아니라 <b>유입과 이탈이 같아진 평형</b>이라는 뜻입니다. 신규를 1명 늘리면 K는 '+k.L.toFixed(2)+'명 늘고, 생애 활성개월을 1개월 늘리면 K는 '+cnt(k.N)+'명 늘어납니다.</div>');
+    $("#kalerts").innerHTML=ka.join("");
+
+    // 시나리오
+    var dA=8;  // M1 잔존 개선폭(%p)
+    var SC=[
+      {n:"A 현상유지", s:"신규·리텐션 지금 그대로", p:[1,1,0]},
+      {n:"B 신규 −2%/월", s:"알림톡 발송 −3%/월이 그대로 이어지는 경우", p:[1,1,-0.02], warn:1},
+      {n:"C 3월 캠페인 제외", s:"신규를 캠페인 없는 18,072명 수준으로", p:[18072/19699,1,0], warn:1},
+      {n:"D M1 잔존 +"+dA+"%p", s:"가입 첫 달 온보딩을 고친다 — 비용은 1회, 효과는 영구", p:[1,(V.actRate+dA)/(V.actRate||1),0], good:1},
+      {n:"E 신규 +30%", s:"알림톡·마케팅 증액을 영구히 유지하는 경우", p:[1.3,1,0]},
+      {n:"F D+E 동시", s:"", p:[1.3,(V.actRate+dA)/(V.actRate||1),0], good:1}
+    ];
+    var kh='<thead><tr><th>시나리오</th><th>+12개월</th><th>+24개월</th><th>+36개월</th><th class="op">수렴 K</th><th>현재 대비</th></tr></thead>';
+    var kb=SC.map(function(x){
+      var r=kSim(x.p[0],x.p[1],x.p[2],36);
+      var kk=(x.p[2]===0&&fin)?K*x.p[0]*x.p[1]:null;
+      var d=r[35]-V.mau;
+      return '<tr'+(x.good?' class="top"':'')+'><td class="how'+(x.warn?' rd':'')+'">'+x.n+(x.s?'<small>'+x.s+'</small>':'')+'</td>'+
+        '<td>'+cnt(r[11])+'</td><td>'+cnt(r[23])+'</td><td>'+cnt(r[35])+'</td>'+
+        '<td class="op">'+(kk?cnt(kk):'<span style="color:var(--ink-3)">수렴 없음</span>')+'</td>'+
+        '<td class="'+(d>0?"pos":"neg")+'">'+(d>0?"+":"−")+cnt(Math.abs(d))+'</td></tr>';
+    }).join("");
+    $("#kTbl").innerHTML=kh+'<tbody>'+kb+'</tbody>';
+
+    // 3월 캠페인 자연실험 (실측 고정값)
+    var PF=[["2026-02",93434],["2026-03",142754],["2026-04",124064],["2026-05",121888],
+            ["2026-06",116837],["2026-07",115629],["2026-08",122028]];
+    var ph='<thead><tr><th>월</th><th>실측 MAU</th><th class="op">K 대비</th><th>비고</th></tr></thead>';
+    var pb=PF.map(function(r){
+      var rt=fin?r[1]/K:0, note="";
+      if(r[0]==="2026-03") note='<b class="hl">캠페인 — 신규 38,913명</b>';
+      else if(r[0]==="2026-02") note="캠페인 직전";
+      else if(r[0]==="2026-06") note="K 선으로 복귀";
+      return '<tr'+(r[0]==="2026-03"?' class="mark"':'')+'><td>'+r[0]+'</td><td>'+cnt(r[1])+'</td>'+
+             '<td class="op '+(rt>1.05?"pos":"")+'">'+(fin?pct(rt,0):"—")+'</td><td style="text-align:left">'+note+'</td></tr>';
+    }).join("");
+    $("#kProof").innerHTML=ph+'<tbody>'+pb+'</tbody>';
+  }
+
   /* ---------- 차트 공통 ---------- */
   var F={sans:'IBM Plex Sans KR, sans-serif', mono:'IBM Plex Mono, monospace'};
   function axes(g,L,T,iw,ih,lo,hi,maxT,sw){
@@ -570,7 +697,10 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
     $("#hOp").textContent="월 "+PL; $("#hCum").textContent="누적 "+PL;
     $("#noteOp").textContent="요율 "+pct(m.rNow)+" → "+pct(m.rAft)+" · "+V.sw+"개월차 전환";
     $("#noteCum").textContent=m.bepMonth?("누적 손익분기 "+m.bepMonth+"개월차"):"기간 내 누적 흑자 없음";
-    $("#noteGrow").textContent="MAU "+cnt(V.mau)+"명에서 출발 · 누적 가입 "+cnt(V.signups)+"명";
+    $("#noteGrow").textContent="MAU "+cnt(V.mau)+"명에서 출발 · K "+cnt(kcap().K)+"명으로 수렴";
+
+    // ---- 성장 한계 · Carrying Capacity ----
+    renderK();
 
     lineChart($("#opSvg"),R,function(r){return r.op},"--s1","월 "+PL+" (원)",V.sw);
     lineChart($("#cumSvg"),R,function(r){return r.cum},"--s3","누적 "+PL+" (원)",V.sw);
@@ -606,10 +736,30 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
         '<span class="sub">현재 '+cur+'</span></div>';
     }
     var sConv=solve("conv",V.conv,30,1), sAov=solve("aov",V.aov,400000,1), sFix=solve("fixed",0,V.fixed,-1);
+    var sMau=solve("mau",V.mau,3000000,1);
     $("#solve").innerHTML=
       need("필요 구매 전환율", pct(V.conv/100), sConv, function(v){return v.toFixed(1)+"%"}) +
       need("필요 객단가", cnt(V.aov)+"원", sAov, function(v){return cnt(Math.ceil(v/1000)*1000)+"원"}) +
       need("허용 월 고정비", money(V.fixed)+"원", sFix, function(v){return money(Math.floor(v/100000)*100000)+"원"});
+
+    // 필요 MAU를 K와 대조한다 — K를 넘는 답은 "불가능"이다
+    (function(){
+      var kk=kcap(), sk=[];
+      if(sMau===null){
+        sk.push('<div class="alert"><b>이미 흑자라 역산이 필요 없습니다.</b> 다만 아래 레버로 더 밀 때도 MAU는 K '+cnt(kk.K)+'명을 넘지 못합니다.</div>');
+      } else if(sMau==="range"){
+        sk.push('<div class="alert bad"><b>활성 유저만으로는 흑자를 만들 수 없습니다.</b> 모수를 아무리 키워도 건당 기여가 음수라 전환율·요율·비용 쪽을 먼저 고쳐야 합니다.</div>');
+      } else if(isFinite(kk.K) && sMau>kk.K){
+        sk.push('<div class="alert bad"><b>「활성 유저를 늘려서」는 이 가정에서 불가능합니다.</b> '+tgt+'개월차 흑자에 필요한 MAU는 <span class="num">'+cnt(sMau)+
+                '</span>명인데, 지금 구조의 천장 K는 <span class="num">'+cnt(kk.K)+'</span>명입니다 — <b>'+cnt(sMau-kk.K)+'명이 구조적으로 모자랍니다.</b> '+
+                'K를 여기까지 올리려면 월 신규를 <b>'+cnt(sMau/kk.L)+'명</b>(현재 '+cnt(kk.N)+'명)으로 올리거나 M1 잔존율을 <b>'+
+                (kk.a*sMau/kk.K*100).toFixed(1)+'%</b>(현재 '+V.actRate+'%)로 올려야 합니다.</div>');
+      } else if(isFinite(kk.K)){
+        sk.push('<div class="alert warn"><b>필요 MAU '+cnt(sMau)+'명은 K '+cnt(kk.K)+'명 안에 들어옵니다.</b> 다만 지금 MAU는 '+cnt(V.mau)+
+                '명이고 K까지 자연 증가로 도달하는 데 시간이 걸립니다 — 모수 레버는 <b>느린 레버</b>입니다.</div>');
+      }
+      $("#solveK").innerHTML=sk.join("");
+    })();
 
     var head='<thead><tr><th>개월</th><th>유저</th><th>구매자</th><th>주문</th><th>GMV</th><th>요율</th><th>수수료 매출</th><th>PG</th><th>포인트</th><th>기존P</th><th>고정비</th><th>'+PL+'</th><th>누적</th></tr></thead>';
     var body=R.map(function(r){
@@ -650,13 +800,17 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
        l:"구매자당 월 주문 "+V.opb+"건 → "+(V.opb+0.2).toFixed(1)+"건", d:diff(altOv({opb:V.opb+0.2}))},
       {h:"묶음 구성 · 무료배송 임계선 · 연관 추천으로 장바구니를 키운다",
        l:"평균 객단가 "+cnt(V.aov)+"원 → "+cnt(V.aov+3000)+"원", d:diff(altOv({aov:V.aov+3000}))},
-      {h:"가입 첫 달 온보딩을 고쳐 이탈 지점을 통과시킨다",
-       s:"70%가 빠지는 구간이라 여기가 가장 개선 여지가 큽니다",
-       l:"신규 활성화율 "+V.actRate+"% → "+(V.actRate+10)+"%", d:diff(altOv({actRate:Math.min(100,V.actRate+10)}))},
-      {h:"기존 유저 유지 — 리텐션 캠페인으로 이탈을 늦춘다", rd:1,
-       s:"월 효과는 작지만 유일하게 시간이 지날수록 커집니다",
-       l:"월 이탈률 "+V.churn+"% → "+Math.max(0,V.churn-0.5)+"%", d:diff(altOv({churn:Math.max(0,V.churn-0.5)}))},
+      {h:"가입 첫 달 온보딩을 고쳐 M1 이탈 지점을 통과시킨다",
+       s:"코호트 실측 M1 잔존 "+V.actRate+"% — <b class=\"wn\">63%가 한 달 만에 빠지는 단일 최대 누수</b>이고, K를 영구히 끌어올리는 유일한 저비용 레버입니다",
+       l:"M1 잔존율 "+V.actRate+"% → "+(V.actRate+8)+"%", d:diff(altOv({actRate:Math.min(100,V.actRate+8)}))},
+      {h:"기존 유저 유지 — 리텐션 캠페인으로 꼬리 이탈을 늦춘다",
+       s:"M13 이후 꼬리가 −4.5%/월로 새는 구간입니다. 월 효과는 작지만 유일하게 시간이 지날수록 커집니다",
+       l:"M1 이후 이탈률 "+V.churn+"% → "+Math.max(0.1,V.churn-0.5).toFixed(1)+"%", d:diff(altOv({churn:Math.max(0.1,V.churn-0.5)}))},
+      {h:"알림톡 발송량을 늘려 신규 가입 모수를 키운다", rd:1,
+       s:"K는 "+kcap().L.toFixed(2)+"배로 증폭되지만 <b class=\"wn\">매달 돈을 써야 유지됩니다</b> — 멈추는 달에 같이 멈춥니다",
+       l:"월 신규 "+cnt(V.newSignup)+"명 → "+cnt(V.newSignup+2000)+"명", d:diff(altOv({newSignup:V.newSignup+2000}))},
       {h:"커머스를 쓸 활성 유저 자체를 늘린다", rd:1,
+       s:"<b class=\"wn\">공짜가 아닙니다.</b> +1만 명을 유지하려면 월 신규를 "+cnt(10000/kcap().L)+"명 영구 증액하거나 생애 활성개월을 "+(10000/kcap().N).toFixed(2)+"개월 늘려야 합니다",
        l:"활성 유저 +1만 명", d:diff(altOv({mau:V.mau+10000}))},
       {g:"요율 · 같은 주문에서 더 받는다"},
       {h:"전환 후 요율을 전 카테고리 1pp씩 더 올린다",
@@ -717,6 +871,18 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
     ln.push('<div class="alert"><b>이 가정에서 가장 큰 단일 레버는 「'+best.l+'」입니다.</b> '+tgt+'개월차 월 '+PL+'이 <span class="num">'+money(best.d.op)+'</span>원 늘고, 기간 누적으로는 <span class="num">'+money(best.d.cum)+'</span>원 차이가 납니다.</div>');
     ln.push('<div class="alert"><b>레버는 곱으로 작용합니다.</b> 수요 3종과 요율을 따로 당긴 효과를 단순히 더하면 <span class="num">'+money(sumParts)+'</span>원이지만, 같이 당기면 <span class="num">'+money(combo.op)+'</span>원입니다 — <b>'+money(combo.op-sumParts)+'원</b>이 교차항에서 나옵니다. 큰 레버 하나보다 <b>작은 레버 세 개를 같이</b> 움직이는 편이 유리합니다.</div>');
     ln.push('<div class="alert warn"><b>배송비 인상은 이익 레버가 아닙니다.</b> 배송비는 플랫폼 매출이 아니라 PG 부과 대상만 늘립니다. 건당 1,000원을 올리면 월 '+PL+'이 <span class="num">'+money(Math.abs(shipD.op))+'</span>원 <b>줄어듭니다</b>. 배송비로 돈을 벌려면 물류를 직접 끼는 구조가 먼저 필요합니다.</div>');
+    (function(){
+      var kk=kcap(), over=V.mau/kk.K;
+      ln.push('<div class="alert '+(over>=0.98?"bad":"warn")+'"><b>모수 레버(활성 유저 · 신규 가입)는 K 위로 올라가지 못합니다.</b> '+
+        '지금 MAU는 K의 <span class="num">'+pct(over,0)+'</span>여서 <b>'+(over>=0.98?"모수 쪽 여유가 사실상 없습니다":"여유가 "+cnt(kk.K-V.mau)+"명 남았습니다")+'</b>. '+
+        '위 표에서 「활성 유저 +1만 명」의 증분을 실현하려면 그 앞에 <b>K를 먼저 '+cnt(kk.K+10000)+'명으로 올리는 일</b>이 있어야 하고, '+
+        '그 방법은 월 신규 증액(계속 지출) 또는 M1 잔존율 개선(1회 개선, 영구 효과) 둘뿐입니다.</div>');
+      var dA=8, kNew=kk.N*((V.actRate+dA)/100)/kk.c, nNeed=(kNew-kk.K)/kk.L;
+      ln.push('<div class="alert"><b>같은 K 증가를 만드는 두 경로의 비용이 다릅니다.</b> M1 잔존율을 '+V.actRate+'% → '+(V.actRate+dA)+
+        '%로 올리면 K가 <span class="num">'+cnt(kk.K)+'</span>명 → <span class="num">'+cnt(kNew)+'</span>명이 됩니다. '+
+        '같은 결과를 신규 증액으로 만들려면 월 <b>'+cnt(nNeed)+'명</b>(현재의 +'+pct(nNeed/kk.N,0)+')을 <b>영구히</b> 더 넣어야 합니다. '+
+        '앞은 온보딩 1회 개선이고 뒤는 매달 나가는 돈입니다.</div>');
+    })();
     ln.push('<div class="alert bad"><b>이 표의 숫자는 상한입니다.</b> 요율 인상에 따른 <b>셀러 이탈</b>, 포인트 축소에 따른 <b>구매 전환 하락</b>, 마케팅 없이 전환율이 오른다는 전제 — 셋 다 모델에 들어 있지 않습니다. 보고에서는 <b>"레버별 최대 기여"</b>로 말하고, 실행 순서는 저항이 낮은 비용 레버부터 잡는 것이 안전합니다.</div>');
     $("#lvrNotes").innerHTML=ln.join("");
   }

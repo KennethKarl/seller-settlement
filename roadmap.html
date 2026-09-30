@@ -805,11 +805,9 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
     var sumParts=[{conv:V.conv+0.5},{opb:V.opb+0.2},{aov:V.aov+3000}]
       .reduce(function(a,ov){return a+diff(altOv(ov)).op},0)
       + diff(altCat(function(cs){cs.forEach(function(c){c.aft=Math.min(100,c.aft+1)})})).op;
-    var shipD=diff(altOv({ship:V.ship+1000}));
     var ln=[];
     ln.push('<div class="alert"><b>이 가정에서 가장 큰 단일 레버는 「'+best.l+'」입니다.</b> '+tgt+'개월차 월 '+PL+'이 <span class="num">'+money(best.d.op)+'</span>원 늘고, 기간 누적으로는 <span class="num">'+money(best.d.cum)+'</span>원 차이가 납니다.</div>');
     ln.push('<div class="alert"><b>레버는 곱으로 작용합니다.</b> 수요 3종과 요율을 따로 당긴 효과를 단순히 더하면 <span class="num">'+money(sumParts)+'</span>원이지만, 같이 당기면 <span class="num">'+money(combo.op)+'</span>원입니다 — <b>'+money(combo.op-sumParts)+'원</b>이 교차항에서 나옵니다. 큰 레버 하나보다 <b>작은 레버 세 개를 같이</b> 움직이는 편이 유리합니다.</div>');
-    ln.push('<div class="alert warn"><b>배송비 인상은 이익 레버가 아닙니다.</b> 배송비는 플랫폼 매출이 아니라 PG 부과 대상만 늘립니다. 건당 1,000원을 올리면 월 '+PL+'이 <span class="num">'+money(Math.abs(shipD.op))+'</span>원 <b>줄어듭니다</b>. 배송비로 돈을 벌려면 물류를 직접 끼는 구조가 먼저 필요합니다.</div>');
     (function(){
       var kk=kcap(), over=V.mau/kk.K;
       ln.push('<div class="alert '+(over>=0.98?"bad":"warn")+'"><b>모수 레버(활성 유저 · 신규 가입)는 K 위로 올라가지 못합니다.</b> '+

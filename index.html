@@ -232,6 +232,9 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
 .doc tr.gap td{padding:4px;background:var(--surface-3);border-bottom:none}
 .doc .lbl{color:var(--ink-2)}
 .doc .zero{color:var(--ink-3)}
+.doc tr.subt td{font-weight:600;border-top:1px solid var(--ink-3)}
+.doc tr.refh td{font-size:11px;font-family:var(--mono);letter-spacing:.04em;color:var(--ink-3);background:var(--surface-3)}
+.doc tr.ref td{color:var(--ink-3)}
 .doc-foot{padding:13px 18px;font-size:12.5px;color:var(--ink-3);line-height:1.6;border-top:1px solid var(--line-2)}
 .doc-acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 .tsv{width:100%;height:120px;margin-top:12px;font-family:var(--mono);font-size:11px;
@@ -247,8 +250,8 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
   <header class="masthead">
     <p class="eyebrow">커머스 정산 · 유닛 이코노믹스</p>
     <h1>셀러 정산 마진 시뮬레이터</h1>
-    <p class="dek">셀러할인 · 리뷰포인트(1:1) · 플랫폼 포인트(1.5:1) · 배송비 · 환불이 섞인 주문이 고객 · 셀러 · PG · 국세청 · 플랫폼로 어떻게 갈라지는지, 그리고 월 단위로 포인트 부채가 손익을 어디까지 끌어내리는지 계산합니다.</p>
-    <p class="srcline">판매가 · 배송비 · PG 수수료는 VAT 포함, 포인트는 지갑별 교환비율 적용. 조건을 바꾸면 즉시 갱신되며 값은 저장되지 않습니다. · <a href="./roadmap.html" style="color:var(--accent)">수수료 전환 로드맵 →</a></p>
+    <p class="dek">셀러할인 · 리뷰포인트(1:1) · 플랫폼 포인트 전환(1.5:1) · 배송비 · 환불이 섞인 주문이 고객 · 셀러 · PG · 국세청 · 플랫폼으로 어떻게 갈라지는지, 그리고 월 단위로 포인트 비용이 손익을 어디까지 끌어내리는지 계산합니다.</p>
+    <p class="srcline">판매가 · 배송비는 VAT 포함, PG 수수료율은 계약서 표기대로 VAT 별도, 포인트는 지갑별 교환비율 적용. 조건을 바꾸면 즉시 갱신되며 값은 저장되지 않습니다. · <a href="./roadmap.html" style="color:var(--accent)">수수료 전환 로드맵 →</a></p>
   </header>
 
   <div class="layout">
@@ -299,7 +302,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
       <section>
         <div class="sec-head">
           <h2>부가세</h2>
-          <span class="note">판매가·배송비·PG 수수료를 모두 VAT 포함으로 봅니다</span>
+          <span class="note">판매가·배송비는 VAT 포함에서 역산 · PG 수수료는 요율(VAT 별도)에 VAT를 더합니다</span>
         </div>
         <div class="sec-body"><div class="ledgers" id="vatbox"></div></div>
       </section>
@@ -360,44 +363,39 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
         <div class="sec-body memos">
           <p class="pracnote"><b style="color:var(--neg)">빨간 줄</b>은 네이버 스마트스토어 · 쿠팡 · 마켓컬리 · 카카오 등 국내 커머스의 일반 관행을 종합한 것입니다. 각 사의 약관·정산 정책은 수시로 바뀌므로 <b>계약 전 현행 정책 문서로 확인</b>하십시오. 법으로 정해진 것과 업계 통념을 구분해 적었습니다.</p>
           <div class="blk">
-            <h3>과세 · 요율 전제</h3>
-            <ul>
-              <li><b>판매가의 VAT 표기.</b> 지금은 판매가·배송비·PG 수수료를 모두 <b>VAT 포함</b>으로 보고 과세표준을 역산합니다. B2B 공급가(VAT 별도) 표기로 간다면 전 구간을 다시 잡아야 합니다.<span class="prac">전자상거래법·표시광고법의 <b>총액표시제</b>에 따라 소비자 판매가는 VAT 포함이 강제됩니다. 네이버·쿠팡·컬리·카카오 모두 소비자가는 VAT 포함이고, 공급가/세액 분리는 세금계산서에서만 합니다. <b>지금 전제가 관행과 같습니다.</b></span></li>
-              <li><b>판매수수료 부과 기준.</b> 판매가에 곱하느냐 셀러할인 후 금액에 곱하느냐로 수수료가 달라집니다. 좌측 토글로 비교할 수 있지만 계약서에 못박혀야 합니다.<span class="prac">대다수가 <b>할인 후 실판매가 기준</b>입니다. 다만 갈리는 지점은 할인의 주체입니다 — <b>셀러 부담 할인은 차감하고, 플랫폼 부담 할인·쿠폰은 되돌려 더한 금액에 부과</b>하는 것이 네이버·쿠팡의 방식입니다. 플랫폼이 마케팅비로 깎아준 몫까지 수수료를 포기하지는 않는다는 논리입니다.</span></li>
-              <li><b>수수료를 VAT 포함가에 곱하는가, 공급가에 곱하는가.</b> 지금은 VAT 포함가에 곱한 뒤 그 결과를 공급가로 보고 VAT를 더합니다. 실질 요율이 약 10% 높아지는 구조입니다.<span class="prac">이것이 <b>업계 표준</b>입니다. VAT 포함 판매가에 요율을 곱해 수수료를 산출하고, 그 수수료를 공급가로 보아 VAT를 별도 청구합니다. 요율 안내도 대부분 "수수료 ○○% (VAT 별도)"로 표기합니다. <b>지금 방식이 관행과 같습니다.</b></span></li>
-              <li><b>셀러할인의 세무 성격.</b> 에누리면 과세표준에서 차감되고, 셀러 발행 마일리지면 차감되지 않습니다. 좌측 토글로 차이를 볼 수 있습니다.<span class="prac">부가세법상 <b>자기적립 마일리지</b>(셀러가 발행·셀러가 부담)는 에누리로 보아 과세표준에서 차감하고, <b>제3자 적립 마일리지</b>(플랫폼 발행분)는 보전받는 대가가 있으므로 과세표준에 포함합니다. 즉 셀러할인은 에누리, 플랫폼 포인트는 과표 포함 — <b>지금 기본값이 관행과 같습니다.</b></span></li>
-              <li><b>PG 계약의 VAT 표기.</b> VAT 포함 전제로 매입세액을 공제하고 있습니다. 계약이 VAT 별도라면 입력 요율에 1.1을 곱해 넣으십시오.<span class="prac"><b>관행은 VAT 별도 표기입니다</b>(예: "2.0% + VAT"). 토스페이먼츠·KCP·나이스페이 등 국내 PG 계약서 대부분이 그렇습니다. 지금 전제와 다르므로, 계약 요율이 2.0%라면 <b>2.2%를 입력</b>해야 실제 지출과 맞습니다.</span></li>
-            </ul>
-          </div>
-          <div class="blk">
-            <h3>환불 · 배송</h3>
-            <ul>
-              <li><b>환불 시 판매수수료 반환 여부.</b> 좌측 토글. 반환하지 않으면 플랫폼 손익이 크게 달라집니다.<span class="prac"><b>전액 반환이 표준</b>입니다. 네이버·쿠팡·컬리 모두 취소·반품 확정 시 판매수수료를 정산에서 되돌려줍니다. 판매가 취소됐는데 중개 수수료만 남기는 구조는 셀러 반발이 큽니다. 기본값 "반환"을 권합니다.</span></li>
-              <li><b>PG 수수료는 환불해도 반환되지 않는다</b>고 가정했습니다. PG 계약서로 확인이 필요합니다.<span class="prac"><b>실제로는 대체로 반환됩니다.</b> 국내 카드 결제는 승인 취소 시 가맹점수수료도 함께 취소되는 것이 원칙입니다. 반환되지 않는 경우는 ① PG사가 <b>취소 건당 수수료</b>를 별도로 받거나 ② 일부 간편결제·해외카드 ③ 부분취소·기간 경과 건입니다. 모델은 보수적으로 "미반환"을 기본값으로 두었으니, 계약을 확인한 뒤 환불률을 낮춰 잡으십시오.</span></li>
-              <li><b>반품 배송비 부담 주체</b>는 모델에 없습니다. 고객 귀책·셀러 귀책을 나눠 약관에 정해야 합니다.<span class="prac"><b>전자상거래법이 기준을 정해 둡니다</b> — 단순변심은 소비자 부담, 상품 하자·오배송·표시광고 상이는 판매자 부담. 플랫폼은 이를 약관에 옮겨 적고 반품비를 셀러 정산에서 차감하거나 구매자에게 청구합니다(네이버·쿠팡 모두 동일 구조). 선택지가 아니라 <b>법정 기준을 따르면 되는 항목</b>입니다.</span></li>
-              <li><b>배송비가 셀러·상품별로 다릅니다.</b> 지금 값은 평균 한 건입니다. 구간이 넓으면 대표 구간별로 따로 돌려 보십시오.<span class="prac"><b>셀러가 직접 설정</b>하게 두는 것이 표준입니다(무료 / 조건부 무료 / 유료, 도서산간 추가). 플랫폼은 <b>배송비에 판매수수료를 붙이지 않고</b>, 다만 <b>결제수수료는 배송비 포함 총 결제액에 부과</b>합니다 — 네이버페이가 명시적으로 그렇습니다. <b>지금 모델이 관행과 같습니다.</b></span></li>
-              <li><b>배송 원가</b>는 셀러 실지출 추정치입니다. 실제 계약 택배 단가로 바꿔 쓰십시오.<span class="prac">셀러 계약 단가는 물량에 따라 <b>대략 2,500~3,500원</b> 선입니다. 플랫폼이 제휴 단가를 제공하는 경우도 많습니다(네이버 도착보장, 쿠팡 로켓그로스 등). 고객에게 받는 배송비(3,000원 전후)와 원가가 거의 같아 <b>셀러의 배송 마진은 0에 가깝고, 결제수수료만큼 역마진</b>이 나는 것이 보통입니다.</span></li>
-            </ul>
-          </div>
-          <div class="blk">
             <h3>포인트 · 정산 운영</h3>
             <ul>
-              <li><b>리뷰포인트를 예수금으로 볼 것인가, 매출로 볼 것인가.</b> 지금은 <b>예수금</b>입니다 — 셀러 부담분을 받아 부채로 적립하고 세금계산서를 발행하지 않습니다. 매출(리뷰 대행 용역)로 보면 세금계산서를 발행하고 부가세를 내야 합니다.<span class="prac">갈리는 지점은 <b>포인트를 누구 이름으로 주느냐</b>입니다. 셀러 명의로 주고 플랫폼이 단순 대행하면 예수금, 플랫폼 명의로 주고 셀러에게 비용을 청구하면 용역 매출로 보는 것이 일반적입니다. 네이버·쿠팡의 셀러 부담 쿠폰·적립금은 대체로 <b>정산 차감만 하고 세금계산서를 발행하지 않는</b> 구조입니다. 지금 전제가 관행과 같습니다. 다만 국세청 해석이 사안별로 갈리므로 <b>세무 검토가 필요한 항목</b>입니다.</span></li>
-              <li><b>포인트 부채를 무엇으로 측정하는가.</b> 지금은 <b>현금 환산가</b>(발행 포인트 ÷ 환산비율)로 잡습니다. 1,500P를 발행하면 실제로 내줄 돈이 1,000원이므로 부채도 1,000원이라는 논리입니다. 액면가 1,500원으로 잡으면 과대계상이고, 사용 시점마다 500원씩 환입이 발생합니다.<span class="prac">회계 기준(일반기준 충당부채·K-IFRS 1115 모두)은 <b>지급할 것으로 예상되는 금액</b>을 부채로 봅니다. 환산비율이 1.5:1이면 현금 환산가가 정답이고, 액면가 인식은 감사에서 지적될 소지가 큽니다. 네이버페이 포인트·카카오 포인트는 1P=1원이라 이 문제가 없지만, 배수 적립형(OK캐쉬백 등)은 현금 환산가로 잡습니다.</span></li>
-              <li><b>환산비율을 바꿀 수 있는가.</b> 1.5:1을 나중에 1.2:1로 바꾸면 이미 쌓인 포인트의 부채가 한 번에 늘어납니다. 비율 변경 권한과 소급 적용 여부를 약관에 미리 적어야 합니다.<span class="prac">불리한 변경(포인트 가치 하락)은 <b>사전 고지 후 기존 적립분은 종전 비율 유지</b>가 안전합니다. 약관규제법상 고객에게 부당하게 불리한 소급 변경은 무효가 될 수 있습니다.</span></li>
-              <li><b>포인트 예상 사용률의 근거.</b> 활성 유저 기준과 커머스 전환 가정을 결산 조서로 남겨야 합니다. 실적이 쌓이기 전에는 100%가 보수적입니다.<span class="prac">과거 사용 이력에 근거한 <b>기대 소멸률(breakage)</b> 추정이 표준이고, 이력이 없으면 100% 부채 인식 후 데이터가 쌓이는 대로 재추정합니다. 네이버·카카오 모두 포인트·캐시 잔액을 유동부채로 잡고 유효기간 경과분을 수익으로 환입합니다.</span></li>
-              <li><b>사용 순서는 ① 리뷰포인트 → ② 플랫폼 포인트로 정했고, 시뮬레이터가 그대로 배분합니다.</b> 포인트 결제액을 보유 리뷰포인트(1:1)에서 먼저 빼고 모자란 만큼을 플랫폼 포인트(1.5:1)로 채웁니다. 플랫폼 포인트 잔액은 충분한 것으로 봅니다. 같은 지갑 안에서는 유효기간 임박 순으로 빼는 2단 규칙이 됩니다. 플랫폼의 현금 지출은 순서와 무관하게 같지만, <b>남는 부채의 구성이 달라집니다</b> — 리뷰포인트는 셀러에게서 이미 절반을 받아둔 몫이고 플랫폼 포인트는 100% 플랫폼 부담이라, 리뷰포인트를 먼저 태우면 <b>잔여 부채가 플랫폼 부담분 위주로 남습니다</b>. 고객에게도 1:1 지갑이 먼저 나가는 편이 유리합니다.<span class="prac">지갑을 나눠 운영하는 곳은 대체로 <b>교환비율이 좋은 지갑을 먼저 소진</b>시킵니다. 고객 불만이 적고, 비율이 나쁜 포인트가 남아 소멸될 확률이 높아 회사에도 유리합니다. 다만 <b>어느 지갑이 먼저 빠지는지 결제 화면에 명시</b>해야 분쟁이 없습니다.</span><span class="prac"><b>유효기간 임박 순 자동 차감</b>이 사실상 표준입니다(네이버페이 포인트, 카카오 포인트 동일). 만료일이 같으면 먼저 적립된 것부터 씁니다. 고객에게도 유리하고 소멸 추정도 단순해지므로 다르게 갈 이유가 거의 없습니다.</span></li>
+              <li><b>리뷰포인트 — 약관·셀러 계약서 문구 주의.</b> 리뷰포인트는 구매회원의 상품 구매후기 작성을 장려하려고 <b>구매회원에게 지급하는 플랫폼 포인트(보상비용)</b>이고, 셀러 부담분은 그 보상비용의 분담액입니다. 매출이 아니므로 세금계산서를 발행하지 않습니다. 이 성격이 <b>문서에서 흔들리지 않게</b> 써야 합니다.<span class="prac">과세당국은 플랫폼이 셀러에게 <b>리뷰 수집·마케팅 용역</b>을 제공하고 대가를 받는 구조로 보이면 용역 매출로 볼 수 있습니다. ① 지급 주체는 플랫폼, 지급 대상은 구매회원, 지급 사유는 구매후기 작성 장려로 적고 ② 셀러 부담분은 "보상비용 분담금"으로 적어 정산에서 차감한다고 명시하며 ③ "리뷰 서비스 이용료·리뷰 마케팅 수수료·리뷰 대행"처럼 <b>용역 대가로 읽히는 표현을 쓰지 않습니다</b>. 확정 전 세무 검토를 권합니다.</span></li>
+              <li><b>포인트 사용액의 원천 추적.</b> 리뷰포인트 사용은 충당부채 감소, 플랫폼 포인트 전환분은 판매촉진비로 처리가 갈리므로, 결제 한 건 안에서도 <b>어느 원천에서 얼마가 쓰였는지 시스템에 남아야</b> 합니다. 정산·회계 데이터 설계에 반영이 필요합니다.</li>
+              <li><b>리뷰포인트 유효기간과 소멸 환입.</b> 유효기간(적립일로부터 10년 검토 중)과 회원탈퇴 시 소멸 규칙을 확정해야 합니다. 소멸분 충당부채 환입은 모델에 없습니다.</li>
+              <li><b>플랫폼 포인트 전환비율을 바꿀 수 있는가.</b> 적립 시 부채를 잡지 않으므로 비율을 바꿔도 장부상 부채는 바로 변하지 않지만, 이후 전환될 때마다 <b>셀러 보전액(판매촉진비)</b>이 달라집니다. 비율 변경 권한과 기존 적립분 적용 여부를 약관에 미리 적어야 합니다.<span class="prac">불리한 변경(포인트 가치 하락)은 <b>사전 고지 후 기존 적립분은 종전 비율 유지</b>가 안전합니다. 약관규제법상 고객에게 부당하게 불리한 소급 변경은 무효가 될 수 있습니다.</span></li>
               <li><b>셀러 정산금이 마이너스일 때</b> 예치금 · 다음 정산 이월 · 청구 중 무엇으로 갈지 약관에 미리 정해야 합니다.<span class="prac"><b>차기 정산 이월이 1순위</b>, 누적되면 <b>별도 입금 청구</b>, 장기 미납 시 판매 중지·보증보험 상계로 가는 3단 구조가 일반적입니다. 처음부터 예치금을 받는 방식은 셀러 모집 장벽이 되어 신규 플랫폼에는 불리합니다.</span></li>
-              <li><b>정산 주기.</b> 구매확정 기준 며칠 뒤 지급인지에 따라 미지급금(운전자본)이 달라집니다.<span class="prac"><b>구매확정은 배송완료 +7일 자동확정</b>이 공통입니다. 지급 주기는 갈립니다 — 네이버 스마트스토어는 <b>구매확정 +1영업일</b>로 가장 빠르고(빠른정산은 집화 기준), 쿠팡은 <b>주 단위 정산</b>, 컬리·카카오 계열은 <b>월 1~2회</b> 수준입니다. 빠를수록 셀러 모집에 유리하지만 플랫폼 운전자본 부담이 커집니다.</span></li>
+              <li><b>정산 주기.</b> 매월 1일~말일 구매확정분의 정산서를 익월 1일 제공하고, 익월 15일 PG사 지급대행을 통해 셀러에게 직접 지급한다. 월초 구매확정분은 지급까지 최장 약 45일이 걸린다. 현재 확인된 온라인 중개거래 적용 법정 지급기한은 없으나, 공정위의 정산기한 단축 입법 동향과 PG사 계약상 지급 가능 일정을 확인한다.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="acctmemo">
+        <div class="sec-head">
+          <h2>회계 검토 메모</h2>
+          <span class="note">경영지원 · 감사 대응용 — 정산 시뮬레이션 숫자와는 무관합니다</span>
+        </div>
+        <div class="sec-body memos">
+          <div class="blk">
+            <h3>K-IFRS 전환 시 포인트 처리</h3>
+            <ul>
+              <li>이 계산기의 포인트 처리와 손익은 모두 <b>일반기업회계기준 현재 장부</b> 기준입니다. K-IFRS 전환 시 같은 처리를 그대로 가정하지 않습니다.</li>
+              <li>셀러에게 현금으로 정산하는 포인트 의무가 <b>K-IFRS 1032 금융부채</b>인지 먼저 검토하고, 해당하면 <b>1109</b>에 따른 인식·측정·제거를 따로 봅니다. 금융부채라면 충당부채처럼 예상 사용률을 적용한다고 가정할 수 없습니다.</li>
+              <li>반대로 사실관계·약관 확인 없이 금융부채라고 단정하지도 않습니다. 약관, 사용 제한, 소멸 조건, 셀러 정산의무를 확인해 판단합니다.</li>
+              <li>플랫폼 포인트도 적립 시 무분개라고 K-IFRS에서 자동으로 무분개로 보지 않습니다. 사용처(상품 결제·기프티콘·기부)별 의무를 따로 분석합니다.</li>
             </ul>
           </div>
           <div class="blk">
             <h3>세무 메모</h3>
             <ul>
               <li>포인트충당부채 설정액은 법인세상 손금불산입(유보). 고객이 실제 사용해 셀러에게 보전할 때 손금 인정(추인).</li>
-              <li>플랫폼 부담 포인트는 무상지급이라 세금계산서·부가세가 없습니다. 다만 셀러 과세표준에는 플랫폼 보전분이 포함될 가능성이 큽니다(제3자 적립 마일리지).</li>
-              <li><b>리뷰포인트 셀러 부담분은 예수금으로 처리합니다.</b> 셀러가 자기 고객에게 주는 대가를 플랫폼가 대신 보관·지급하는 것이므로 플랫폼 매출이 아니고, 세금계산서도 발행하지 않습니다. 정산금에서 차감만 하고 포인트부채로 적립합니다.</li>
-              <li>계정명은 일반기준 <b>포인트충당부채</b>, K-IFRS <b>포인트부채(환불부채 성격)</b>.</li>
+              <li>플랫폼 부담 포인트는 무상지급이라 세금계산서·부가세가 없습니다. 다만 셀러 과세표준에는 플랫폼 보전분이 포함됩니다(제3자 적립 마일리지 — 시뮬레이터도 포함해 계산).</li>
               <li>위 정리는 실무 관행 기준입니다. 도입 전 세무사·회계사 확인이 필요합니다.</li>
             </ul>
           </div>
@@ -406,7 +404,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
 
       <footer>
         <span class="dagger">†</span> PG 결제수수료율은 가정값입니다. 실제 계약 요율로 바꿔 쓰십시오.<br>
-        모든 금액은 원 단위 · ROUND(x, 0) 반올림. 부가세는 VAT 포함 금액에서 역산합니다.
+        모든 금액은 원 단위 · ROUND(x, 0) 반올림. 부가세는 VAT 포함 금액에서 역산합니다. 월 집계에서 수수료·PG는 건별 금액 × 건수, 세액은 월 공급가 합계 × 세율로 한 번만 반올림합니다.
       </footer>
     </main>
   </div>
@@ -423,60 +421,47 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
   var pts=function(x){return Math.round(x).toLocaleString("ko-KR")+"P"};
 
   // 화면 기본값은 중립 예시다. 실제 운영 조건은 코드에 두지 않고 임베드 주소에만 싣는다.
-  var BASE={price:20000,sellerDisc:2000,rvBal:500,ptPay:1000,ptRate:1.5,ship:3000,shipCost:3000,
+  var BASE={price:20000,sellerDisc:2000,rvBal:500,ptPay:1000,ptRate:1.5,ship:3000,shipCost:0,
             feeRate:10,pgRate:2.5,vat:10,
             orders:1000,refundRate:5,reviewRate:20,reviewPt:500,sellerShare:50,
-            eventPt:1500000,useRate:80,payDays:15,
-            feeBase:"sales",discMode:"enuri",feeRefund:"yes"};
+            eventPt:1500000,payDays:15};
   // 최소 조건: 배송비·환불·PG 없음, 주문 1건, 리뷰 0건
   var SHEET={price:20000,sellerDisc:2000,rvBal:0,ptPay:1000,ptRate:1.5,ship:0,shipCost:0,
             feeRate:10,pgRate:0,vat:10,
             orders:1,refundRate:0,reviewRate:0,reviewPt:500,sellerShare:50,
-            eventPt:1500000,useRate:80,payDays:0,
-            feeBase:"sales",discMode:"enuri",feeRefund:"yes"};
+            eventPt:1500000,payDays:15};
 
-  var TOGGLES={
-    feeBase:{label:"수수료 부과 기준",opts:[["price","판매가<br>(할인 전)"],["sales","셀러 매출<br>(할인 후)"]],
-      flag:'<b>확정 필요.</b> 판매가에 곱하느냐 셀러할인 후 금액에 곱하느냐로 수수료가 달라집니다.'},
-    discMode:{label:"셀러할인의 세무 성격",opts:[["enuri","에누리<br>(과표 차감)"],["mileage","마일리지<br>(과표 유지)"]],
-      flag:'에누리면 셀러 과세표준에서 빠지고, 셀러 발행 마일리지면 빠지지 않습니다.'},
-    feeRefund:{label:"환불 시 판매수수료",opts:[["yes","반환<br>(수익 취소)"],["no","미반환<br>(수익 유지)"]],
-      flag:'PG 수수료는 어느 쪽이든 환불되지 않는 것으로 계산합니다.'}
-  };
+  // 선택형 입력. 관행·법으로 답이 정해진 항목은 두지 않는다 — 지금은 비어 있다
+  var TOGGLES={};
 
   var SPEC=[
     {grp:"주문 1건"},
     {id:"price",label:"판매가",min:0,max:200000,step:500,unit:"원",help:"VAT 포함 소비자가"},
-    {id:"sellerDisc",label:"셀러할인",min:0,max:100000,step:100,unit:"원",help:"셀러가 부담하는 즉시할인 — 셀러 발행 포인트가 상품에 부여된 것"},
-    {tog:"discMode"},
+    {id:"sellerDisc",label:"셀러할인",min:0,max:100000,step:100,unit:"원",help:"셀러가 부담하는 즉시할인·쿠폰·자기적립 마일리지. 부가세법상 에누리라 <b>셀러 과세표준에서 차감</b>한다"},
     {id:"ptPay",label:"포인트 결제액",min:0,max:100000,step:100,unit:"원",help:"고객이 포인트로 결제한 <b>현금 금액</b>. 아래 규칙으로 두 지갑에 자동 배분된다"},
-    {id:"rvBal",label:"보유 리뷰포인트",min:0,max:100000,step:100,unit:"P",help:"<b>차감 1순위.</b> 결제액을 이 잔액에서 먼저 빼고(1:1), 모자란 만큼만 플랫폼 포인트로 채운다"},
-    {id:"ptRate",label:"플랫폼 포인트 환산비율",min:1,max:5,step:0.1,unit:"P = 1원",help:"1원을 깎으려면 몇 포인트가 필요한가. 1.5면 1,500P를 써야 1,000원이 할인된다. 리뷰포인트에는 적용되지 않는다"},
+    {id:"rvBal",label:"보유 리뷰포인트",min:0,max:100000,step:100,unit:"P",help:"<b>차감 1순위.</b> 결제액을 이 잔액에서 먼저 빼고(1:1), 모자란 만큼만 플랫폼 포인트를 전환해 채운다"},
+    {id:"ptRate",label:"플랫폼 포인트 전환비율",min:1,max:5,step:0.1,unit:"P = 1원",help:"결제 시 플랫폼 포인트 몇 P가 1원으로 전환되는가. 1.5면 1,500P → 1,000원. 전환분은 그 결제에서 즉시 쓰인다. 리뷰포인트에는 적용되지 않는다"},
     {id:"ship",label:"배송비 (평균)",min:0,max:50000,step:500,unit:"원",help:"셀러·상품별로 다르므로 평균 한 건. 판매수수료는 붙지 않고 PG 수수료만 차감해 셀러에게 전달한다"},
-    {id:"shipCost",label:"배송 원가 (셀러 실지출)",min:0,max:50000,step:500,unit:"원",help:"셀러가 택배사에 실제로 내는 돈. 배송비보다 크면 셀러는 배송에서 손해를 본다"},
-    {id:"feeRate",label:"판매수수료율",min:0,max:30,step:0.5,unit:"%",help:"아래 부과 기준에 곱한다. 배송비에는 붙지 않는다"},
-    {tog:"feeBase"},
-    {id:"pgRate",label:"PG 결제수수료율",min:0,max:6,step:0.1,unit:"%",help:"배송비 포함 총 결제액에 부과. 상품분은 플랫폼이, 배송비분은 셀러가 부담. VAT 포함 요율로 본다 †"},
+    {id:"shipCost",label:"배송 원가 (셀러 참고)",min:0,max:50000,step:100,unit:"원",help:"셀러가 택배사에 내는 계약 단가. 셀러 수지를 볼 때만 넣는다 — <b>플랫폼 정산·손익에는 쓰지 않는다</b>. 0이면 미입력"},
+    {id:"feeRate",label:"판매수수료율",min:0,max:30,step:0.5,unit:"%",help:"셀러 매출(판매가 − 셀러 부담 할인)에 곱한다. 플랫폼 포인트 결제분은 셀러에게 보전하므로 부과 대상에 남는다. 배송비에는 붙지 않는다"},
+    {id:"pgRate",label:"PG 결제수수료율",min:0,max:6,step:0.1,unit:"%",help:"계약서 표기대로 <b>VAT 별도</b> 요율을 넣는다(예: 2.5% + VAT). 배송비 포함 총 결제액에 부과. 상품분은 플랫폼이, 배송비분은 셀러가 부담 †"},
     {id:"vat",label:"부가세율",min:0,max:20,step:1,unit:"%"},
     {grp:"월간"},
     {id:"orders",label:"당월 주문 건수",min:0,max:5000,step:10,unit:"건",help:"위 주문 1건이 이만큼 반복된다고 가정"},
-    {id:"refundRate",label:"환불률",min:0,max:50,step:1,unit:"%",help:"환불 건은 셀러 정산·수수료 수익에서 빠지지만 PG 수수료는 그대로 나간다"},
-    {tog:"feeRefund"},
-    {id:"reviewRate",label:"리뷰 작성률",min:0,max:100,step:5,unit:"%",help:"유효 주문 대비. 주문이 늘면 리뷰도 늘어야 손익분기가 정확해진다"},
-    {id:"reviewPt",label:"리뷰 건당 포인트",min:0,max:3000,step:50,unit:"P",help:"고객에게 지급하는 리뷰포인트. 현금 교환비율 1:1이라 액면 그대로가 원가다"},
-    {id:"sellerShare",label:"리뷰포인트 셀러 부담비율",min:0,max:100,step:5,unit:"%",help:"나머지는 플랫폼 부담. 셀러 부담분만 세금계산서 발행 대상"},
-    {id:"eventPt",label:"당월 플랫폼 포인트 지급",min:0,max:7500000,step:50000,unit:"P",help:"가입·산책 등 플랫폼 100% 부담 (서비스 전체). 환산비율 적용 대상"},
-    {id:"useRate",label:"포인트 예상 사용률",min:0,max:100,step:5,unit:"%",help:"부채 설정용. 실적이 쌓이기 전에는 100%가 보수적이다"},
-    {id:"payDays",label:"정산 주기",min:0,max:90,step:1,unit:"일",help:"구매확정 뒤 며칠에 지급하는가. 미지급금(운전자본) 계산에 쓴다"}
+    {id:"refundRate",label:"환불률",min:0,max:50,step:1,unit:"%",help:"구매확정 전 취소·반품. 정산·판매수수료는 구매확정 건에만 발생하므로 환불 건은 수수료도 없고, PG 수수료도 승인취소로 반환된다"},
+    {id:"reviewRate",label:"리뷰 작성률",min:0,max:100,step:5,unit:"%",help:"유효(구매확정) 주문 대비. 리뷰는 구매확정 후 30일 안에만 쓸 수 있고, 확정 후에는 환불이 없다. 월말 확정분의 리뷰는 다음 달에 지급될 수 있지만, 매달 거래량이 비슷하다고 보고 <b>당월 리뷰 = 유효 주문 × 작성률</b>로 근사한다"},
+    {id:"reviewPt",label:"리뷰 건당 포인트",min:0,max:3000,step:50,unit:"P",help:"상품·셀러별 설정값. 현금 교환비율 1:1이라 액면 그대로가 원가다"},
+    {id:"sellerShare",label:"리뷰포인트 셀러 부담비율",min:0,max:100,step:5,unit:"%",help:"나머지는 플랫폼 부담(판매촉진비). 셀러 부담분은 정산금에서 차감해 회수한다 — 매출이 아니라 세금계산서 대상 아님"},
+    {id:"eventPt",label:"당월 플랫폼 포인트 적립 (참고)",min:0,max:7500000,step:50000,unit:"P",help:"가입·활동 보상. <b>적립 시 분개하지 않으므로</b> 손익·부채에 넣지 않는다. 결제에서 전환·사용될 때만 비용이 된다"},
+    {id:"payDays",label:"정산 지급일 (익월)",min:1,max:28,step:1,unit:"일",help:"월 정산 — 1일~말일 구매확정분을 <b>익월 이 날짜</b>에 지급한다. 월말에는 당월 구매확정분 전액이 미지급금으로 남는다"}
   ];
 
-  // ?p=&d=&pp=&rvb=&pr=&sh=&sc=&fee=&pg=&vat=&n=&rf=&rv=&rp=&rs=&ev=&ur=&pd=&base=&disc=&frf= 로 덮어쓴다.
+  // ?p=&d=&pp=&rvb=&pr=&sh=&sc=&fee=&pg=&vat=&n=&rf=&rv=&rp=&rs=&ev=&pd= 로 덮어쓴다.
   // 슬라이더 범위 안으로 잘라 넣어 값과 손잡이 위치가 어긋나지 않게 한다.
   var QMAP={price:"p",sellerDisc:"d",rvBal:"rvb",ptPay:"pp",ptRate:"pr",ship:"sh",shipCost:"sc",feeRate:"fee",
             pgRate:"pg",vat:"vat",orders:"n",refundRate:"rf",reviewRate:"rv",reviewPt:"rp",
-            sellerShare:"rs",eventPt:"ev",useRate:"ur",payDays:"pd"};
-  var TMAP={feeBase:["base",["price","sales"]],discMode:["disc",["enuri","mileage"]],
-            feeRefund:["frf",["yes","no"]]};
+            sellerShare:"rs",eventPt:"ev",payDays:"pd"};
+  var TMAP={};
   try{
     var q=new URLSearchParams(location.search), RANGE={};
     SPEC.forEach(function(x){ if(x.id&&x.min!==undefined) RANGE[x.id]={min:x.min,max:x.max}; });
@@ -554,11 +539,11 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
     var PiWant=V.ptPay;                  // 고객이 포인트로 결제한 금액 (현금)
     var Pi=Math.min(PiWant,Math.max(0,P-Ds));
     var clamped=(Ds!==V.sellerDisc)||(Pi!==PiWant);
-    // ① 리뷰포인트(1:1)에서 먼저 빼고 ② 모자란 만큼 플랫폼 포인트(환산)로 채운다
+    // ① 리뷰포인트(1:1)에서 먼저 빼고 ② 모자란 만큼 플랫폼 포인트를 전환(환산)해 채운다
     var RvCash=Math.min(V.rvBal,Pi);
     var InCash=Pi-RvCash;
     var RvP=RvCash;                      // 1:1
-    var InP=r0(InCash*pr);               // 필요한 플랫폼 포인트 수
+    var InP=r0(InCash*pr);               // 전환에 필요한 플랫폼 포인트 수
     var rvLeft=Math.max(0,V.rvBal-RvCash);
     var Sh=V.ship, ShC=V.shipCost;
 
@@ -566,18 +551,21 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
     var A=Ag+Sh;                  // 고객 실결제
     var S=P-Ds;                   // 셀러 거래금액 (VAT 포함)
 
-    var feeBaseAmt=V.feeBase==="price"?P:S;
+    var feeBaseAmt=S;   // 수수료 부과 기준 = 셀러 매출(셀러 부담 할인만 차감, 플랫폼 포인트 보전분 포함)
     var F=r0(feeBaseAmt*fr), Fv=r0(F*vat);
 
-    var pgGoods=r0(Ag*pgr), pgShip=r0(Sh*pgr), pg=pgGoods+pgShip;
-    var pgGoodsVatIn=r0(pgGoods*vat/(1+vat));   // 플랫폼 매입세액
-    var pgShipVatIn=r0(pgShip*vat/(1+vat));     // 셀러 매입세액
+    // PG 요율은 계약서 표기대로 VAT 별도("2.5% + VAT") — 공급가를 먼저 구하고 VAT를 더한다
+    var pgGoodsSupply=r0(Ag*pgr), pgShipSupply=r0(Sh*pgr);
+    var pgGoodsVatIn=r0(pgGoodsSupply*vat);     // 플랫폼 매입세액
+    var pgShipVatIn=r0(pgShipSupply*vat);       // 셀러 매입세액
+    var pgGoods=pgGoodsSupply+pgGoodsVatIn, pgShip=pgShipSupply+pgShipVatIn, pg=pgGoods+pgShip;
 
     // --- 셀러 ---
     var shipNet=Sh-pgShip;
     var sellerGoods=S-F-Fv;
     var sellerOrder=sellerGoods+shipNet;
-    var taxIncl=(V.discMode==="enuri"?S:P)+Sh;  // VAT 포함 과세대상
+    // 셀러 과세대상 = 셀러할인 차감 후(에누리) + 배송비. 플랫폼 보전 포인트는 S에 남아 과표에 포함된다
+    var taxIncl=S+Sh;
     var sellerVatOut=r0(taxIncl/(1+vat)*vat);
     var shipCostVatIn=r0(ShC*vat/(1+vat));
     var sellerVatIn=Fv+pgShipVatIn+shipCostVatIn;
@@ -597,47 +585,57 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
     var sellerKeep=P?sellerNet/P:0;
 
     // --- 월 ---
-    var N=V.orders, Ne=N*(1-rr), Nr=N-Ne;
-    var Nfee=(V.feeRefund==="yes")?Ne:N;
-    var reviewCnt=Math.round(Ne*V.reviewRate/100);
+    var N=V.orders, Nr=Math.round(N*rr), Ne=N-Nr;   // 건수는 정수 — 소수 건이 생기면 월 금액이 원 단위로 안 맞는다
+    var Nfee=Ne;   // 판매수수료는 구매확정 건에만 — 환불 건은 수수료 없음
+    var reviewCnt=Math.round(Ne*V.reviewRate/100);   // 리뷰는 구매확정 건에서만 — 유효 주문 × 작성률
     var reviewIssuedP=reviewCnt*V.reviewPt;          // 리뷰포인트 (P)
     var reviewIssued=reviewIssuedP;                  // 1:1 — 액면이 곧 원가
-    var RB=r0(reviewIssued*(V.sellerShare/100));   // 셀러 부담분 — 예수금, 매출 아님
-    var RBin=reviewIssued-RB;                      // 플랫폼 부담분
+    var RB=r0(reviewIssued*(V.sellerShare/100));   // 셀러 부담분 — 셀러미수금(정산 차감 회수), 매출 아님
+    var RBin=reviewIssued-RB;                      // 당사 부담분 — 발생 시 판매촉진비
 
-    var mFee=F*Nfee, mFeeVat=Fv*Nfee;
+    // 반올림 기준: 금액(수수료·PG)은 건별, 세액은 월 공급가 합계 × 세율로 한 번만 — 세금계산서 발행 단위
+    var mFee=F*Nfee, mFeeVat=r0(mFee*vat), mFeeVatPerOrder=Fv*Nfee;
     var mSalesBase=S*Ne;
-    var mShipRecv=Sh*Ne-pgShip*N;          // 환불 건도 배송비분 PG는 나간다
+    // 배송비분 PG는 플랫폼이 셀러에게 "결제수수료(배송비분)"로 재청구하고 세금계산서에 올린다 — 셀러가 매입세액 공제를 받도록.
+    // 세금계산서와 같은 금액이어야 하므로 세액은 월 공급가 합계 × 세율. 환불 건은 승인취소로 빠진다
+    var mPgShipSupply=pgShipSupply*Ne, mPgShipVat=r0(mPgShipSupply*vat), mPgShipCharge=mPgShipSupply+mPgShipVat;
+    var mShipRecv=Sh*Ne-mPgShipCharge;
     var mSellerPayout=mSalesBase-mFee-mFeeVat-RB+mShipRecv;   // 리뷰비는 부가세 없음
-    var mPgGoods=pgGoods*N;                // 환불해도 반환되지 않는다
-    var mPgGoodsSupply=mPgGoods-r0(mPgGoods*vat/(1+vat));
+    // 환불 건은 승인취소 시 PG 수수료도 함께 취소된다 — 유효 건만. 매입세액은 월 공급가 합계 × 세율
+    var mPgGoodsSupply=pgGoodsSupply*Ne, mPgGoodsVatIn=r0(mPgGoodsSupply*vat);
+    var mPgGoods=mPgGoodsSupply+mPgGoodsVatIn;
     var mReimb=Pi*Ne;
-    var mIntoRevenue=mFee;                 // 수수료만 매출 — 리뷰비는 예수금
-    var mVatPay=mFeeVat-r0(mPgGoods*vat/(1+vat));
+    var mIntoRevenue=mFee;                 // 수수료만 매출 — 리뷰P 셀러부담금은 매출 아님
+    var mVatPay=mFeeVat-mPgGoodsVatIn;
     var mIntoCash=(mFee+mFeeVat+RB)-mReimb-mPgGoods-mVatPay;
     var mCustomerPaid=A*Ne;
     var mRefunded=A*Nr;
 
-    var eventCash=r0(V.eventPt/pr);                  // 플랫폼 포인트 환산
-    var issuedP=reviewIssuedP+V.eventPt;             // 포인트 합계 (지갑 단위가 달라 참고용)
-    var issued=reviewIssued+eventCash;               // 현금 환산 — 실제 지출할 금액
-    var liability=r0(issued*(V.useRate/100));            // 재무상태표 전체 부채
-    var liabPl=r0((RBin+eventCash)*(V.useRate/100));     // 손익에 반영되는 플랫폼 부담분
-    var liabSeller=liability-liabPl;                     // 셀러에게 받아둔 예수금 성격
-    var opGeneral=mIntoRevenue-liabPl-mPgGoodsSupply;
-    var payable=mSellerPayout*(V.payDays/30);   // 미지급금 근사
+    // --- 포인트 (일반기준 · ACCOUNTING-POLICY.md) ---
+    // 리뷰포인트: 지급 시 전체를 충당부채(100%, 사용률 추정 없음) · 당사 부담분만 판매촉진비 · 사용 시 충당부채 감소
+    // 플랫폼 포인트: 적립 시 무분개 · 결제에서 전환·즉시 사용될 때 셀러 보전액을 판매촉진비
+    var mRvUse=RvCash*Ne;                  // 리뷰포인트 사용 → 충당부채 감소 (손익 아님)
+    var mInUse=InCash*Ne;                  // 플랫폼 포인트 전환 사용 → 판매촉진비
+    var rvProvNet=reviewIssued-mRvUse;     // 당월 충당부채 순증감
+    var mPromo=RBin+mInUse;                // 판매촉진비 합계
+    var eventCash=r0(V.eventPt/pr);        // 플랫폼 포인트 적립의 현금 환산 — 참고용, 장부 미인식
+    var opGeneral=mIntoRevenue-mPromo-mPgGoodsSupply;
+    // 월 정산: 당월 1일~말일 구매확정분을 익월 payDays일에 지급 → 월말 미지급금 = 당월 정산금 전액
+    var payable=mSellerPayout;
+    var holdDays=Math.round(30/2+V.payDays);   // 구매확정부터 지급까지 평균 보유일수 (월중 균등 가정)
 
-    // --- 손익분기 (리뷰가 주문에 연동된다) ---
+    // --- 손익분기 (리뷰는 주문에 연동 — 모든 항목이 주문 건수에 비례) ---
+    var rvCostEach=V.reviewPt*(1-V.sellerShare/100);   // 리뷰 1건당 당사 부담 판매촉진비 (1:1)
     var k=(V.reviewRate/100)*(1-rr);
-    var rpCash=V.reviewPt;   // 리뷰포인트 1:1
-    var slope=F*(V.feeRefund==="yes"?(1-rr):1)
-             - k*rpCash*(1-V.sellerShare/100)*(V.useRate/100)
-             - (pgGoods-r0(pgGoods*vat/(1+vat)));
-    var fixed=-(V.eventPt/pr)*(V.useRate/100);
-    var bep=(fixed>=0)?0:(slope>0?Math.ceil(-fixed/slope):null);
+    var slope=F*(1-rr)
+             - k*rvCostEach
+             - InCash*(1-rr)
+             - pgGoodsSupply*(1-rr);
+    var fixed=0;   // 고정비 없음 — 플랫폼 포인트 적립은 무분개라 넣지 않는다. 고정비 항목을 추가하면 여기에
+    var bep=(fixed>=0)?(slope>=0?0:null):(slope>0?Math.ceil(-fixed/slope):null);
 
     return {P:P,Ds:Ds,Pi:Pi,PiWant:PiWant,RvP:RvP,InP:InP,RvCash:RvCash,InCash:InCash,rvLeft:rvLeft,pr:pr,Sh:Sh,ShC:ShC,Ag:Ag,A:A,S:S,clamped:clamped,total:P+Sh,vat:vat,
-      feeBaseAmt:feeBaseAmt,F:F,Fv:Fv,pg:pg,pgGoods:pgGoods,pgShip:pgShip,
+      feeBaseAmt:feeBaseAmt,F:F,Fv:Fv,pg:pg,pgGoods:pgGoods,pgShip:pgShip,pgGoodsSupply:pgGoodsSupply,pgShipSupply:pgShipSupply,mPgGoodsVatIn:mPgGoodsVatIn,
       pgGoodsVatIn:pgGoodsVatIn,pgShipVatIn:pgShipVatIn,shipCostVatIn:shipCostVatIn,
       shipNet:shipNet,sellerGoods:sellerGoods,sellerOrder:sellerOrder,
       taxIncl:taxIncl,taxBase:taxIncl/(1+vat),sellerVatOut:sellerVatOut,sellerVatIn:sellerVatIn,
@@ -645,11 +643,11 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
       intoOrder:intoOrder,intoNet:intoNet,intoVatPay:intoVatPay,intoCash:intoCash,
       takeGross:takeGross,takeNet:takeNet,realRate:realRate,
       N:N,Ne:Ne,Nr:Nr,Nfee:Nfee,reviewCnt:reviewCnt,reviewIssued:reviewIssued,reviewIssuedP:reviewIssuedP,RB:RB,RBin:RBin,
-      mFee:mFee,mFeeVat:mFeeVat,mSalesBase:mSalesBase,mShipRecv:mShipRecv,
+      mFee:mFee,mFeeVat:mFeeVat,mFeeVatPerOrder:mFeeVatPerOrder,mPgShipSupply:mPgShipSupply,mPgShipVat:mPgShipVat,mPgShipCharge:mPgShipCharge,mSalesBase:mSalesBase,mShipRecv:mShipRecv,
       mSellerPayout:mSellerPayout,mPgGoods:mPgGoods,mPgGoodsSupply:mPgGoodsSupply,
       mReimb:mReimb,mIntoRevenue:mIntoRevenue,mVatPay:mVatPay,mIntoCash:mIntoCash,
       mCustomerPaid:mCustomerPaid,mRefunded:mRefunded,
-      issued:issued,issuedP:issuedP,eventCash:eventCash,liability:liability,liabPl:liabPl,liabSeller:liabSeller,opGeneral:opGeneral,payable:payable,bep:bep,slope:slope};
+      mRvUse:mRvUse,mInUse:mInUse,rvProvNet:rvProvNet,mPromo:mPromo,eventCash:eventCash,opGeneral:opGeneral,payable:payable,holdDays:holdDays,bep:bep,slope:slope,fixed:fixed};
   }
 
   /* ---------- 조각 ---------- */
@@ -657,7 +655,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
     {k:"seller",n:"셀러 정산 (상품)", c:"--s1",on:"--on1",d:"셀러매출 − 판매수수료(VAT 포함) · 부가세 납부 전"},
     {k:"ship",  n:"셀러 배송비 수취", c:"--s2",on:"--on2",d:"배송비에서 배송비분 PG 수수료를 뗀 금액"},
     {k:"disc",  n:"셀러할인",        c:"--s3",on:"--on3",d:"고객이 받은 혜택 · 셀러 부담"},
-    {k:"point", n:"포인트 사용분",    c:"--s4",on:"--on4",d:"① 리뷰포인트(1:1) → ② 플랫폼 포인트(환산) 순으로 차감 · 플랫폼 부담 → 셀러에게 현금 보전"},
+    {k:"point", n:"포인트 사용분",    c:"--s4",on:"--on4",d:"① 리뷰포인트(1:1) → ② 플랫폼 포인트 전환(환산) 순으로 차감 · 플랫폼이 셀러에게 현금 보전"},
     {k:"vat",   n:"부가세 (플랫폼분)",  c:"--s5",on:"--on5",d:"수수료 매출세액에서 PG 매입세액을 뺀 납부액"},
     {k:"pg",    n:"PG 결제수수료",   c:"--s6",on:"--on6",d:"총 결제액 기준 · 상품분은 플랫폼이, 배송비분은 셀러가 부담 †"},
     {k:"into",  n:"플랫폼 잔여현금",   c:"--s7",on:"--on7",d:"수수료 − 포인트 보전 − 상품분 PG − 부가세"}
@@ -680,10 +678,8 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
     var al=[];
     if(m.clamped) al.push('<div class="alert"><b>입력 초과.</b> 셀러할인 + 포인트 결제액이 판매가를 넘어서 판매가 한도로 잘라 계산했습니다.</div>');
     if(m.intoCash<0) al.push('<div class="alert"><b>이 주문은 플랫폼이 손해입니다.</b> 받는 수수료 <span class="num">'+won(m.F+m.Fv)+'원</span>보다 내주는 돈(포인트 보전 '+won(m.Pi)+'원 + 상품분 PG '+won(m.pgGoods)+'원 + 부가세 '+won(m.intoVatPay)+'원)이 커서 건당 <span class="num">'+won(Math.abs(m.intoCash))+'원</span>씩 빠집니다.</div>');
-    if(m.ShC>m.shipNet) al.push('<div class="alert warn"><b>셀러가 배송에서 손해를 봅니다.</b> 받는 배송비 <span class="num">'+won(m.shipNet)+'원</span>보다 배송 원가 <span class="num">'+won(m.ShC)+'원</span>이 커서 건당 <span class="num">'+won(m.ShC-m.shipNet)+'원</span> 역마진입니다.</div>');
     if(m.mSellerPayout<0) al.push('<div class="alert warn"><b>셀러 정산금이 마이너스입니다.</b> 이번 달 줄 돈보다 뗄 돈이 <span class="num">'+won(Math.abs(m.mSellerPayout))+'원</span> 많습니다. 예치금·이월·청구 중 어느 쪽으로 처리할지 약관에 정해져 있어야 합니다.</div>');
-    if(m.issued>0&&m.mReimb>m.liability) al.push('<div class="alert warn"><b>포인트 수지가 가정과 어긋납니다.</b> 당월 사용 <span class="num">'+won(m.mReimb)+'원</span>이 부채 설정액 <span class="num">'+won(m.liability)+'원</span>보다 커서, 이 상태가 이어지면 부채 잔액이 매달 <span class="num">'+won(m.mReimb-m.liability)+'원</span>씩 깎여 결국 음수가 됩니다. 실제 사용률은 <span class="num">'+pct(m.mReimb/m.issued)+'</span>에 가깝다는 뜻입니다. 모두 현금 환산 기준입니다.</div>');
-    if(m.opGeneral<0) al.push('<div class="alert warn"><b>당월 영업이익이 적자입니다.</b> 플랫폼 부담 포인트 <span class="num">'+won(m.liabPl)+'원</span>을 수수료 매출이 덮지 못합니다'+(m.bep!==null?'. 손익분기 주문 건수는 <span class="num">'+cnt(m.bep)+'건</span>입니다':'')+'.</div>');
+    if(m.opGeneral<0) al.push('<div class="alert warn"><b>당월 영업이익이 적자입니다.</b> 포인트 판매촉진비 <span class="num">'+won(m.mPromo)+'원</span>과 PG 비용을 수수료 매출이 덮지 못합니다'+(m.bep!==null&&m.bep>0?'. 손익분기 주문 건수는 <span class="num">'+cnt(m.bep)+'건</span>입니다':m.bep===null?'. 주문이 늘어도 적자가 커지는 구조입니다':'')+'.</div>');
     $("#alerts").innerHTML=al.join("");
 
     /* --- 지표 타일 --- */
@@ -692,17 +688,17 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
       tile("고객 · 실결제","₩"+won(m.A),"", (function(){
         var cuts=[];
         if(m.Ds>0) cuts.push("셀러할인 "+won(m.Ds));
-        if(m.Pi>0) cuts.push("포인트 "+won(m.Pi)+"(리뷰 "+pts(m.RvP)+" + 플랫폼 "+pts(m.InP)+")");
+        if(m.Pi>0) cuts.push("포인트 "+won(m.Pi)+"(리뷰 "+pts(m.RvP)+" + 플랫폼 "+pts(m.InP)+" 전환)");
         var d="상품 "+won(m.Ag)+"원"+(m.Sh>0?" + 배송비 "+won(m.Sh)+"원":"")+"<br>"+
               "상품 = 판매가 "+won(m.P);
         d += cuts.length ? " − "+cuts.join(" − ")+" (정상가 대비 <b>"+pct(discRate)+"</b> 할인)" : " (할인 없음)";
         return d;
       })())+
-      tile("셀러 · 부가세·배송원가 후","₩"+won(m.sellerNet),m.sellerNet<0?"neg":"", "정산 "+won(m.sellerOrder)+"원 − 부가세 "+won(m.sellerVatPay)+"원 − 배송원가 "+won(m.ShC)+"원 · 판매가의 <b>"+pct(m.sellerKeep)+"</b>")+
+      tile(m.ShC>0?"셀러 · 부가세·배송원가 후":"셀러 · 부가세 후","₩"+won(m.sellerNet),m.sellerNet<0?"neg":"", "정산 "+won(m.sellerOrder)+"원 − 부가세 "+won(m.sellerVatPay)+"원"+(m.ShC>0?" − 배송원가 "+won(m.ShC)+"원":"")+" · 판매가의 <b>"+pct(m.sellerKeep)+"</b>")+
       tile("플랫폼 · 건당 남는 현금","₩"+won(m.intoCash),m.intoCash<0?"neg":"pos", (function(){
         var t=["수수료 "+won(m.F+m.Fv)+"원(VAT 포함)"];
         if(m.Pi>0) t.push("− 포인트 보전 "+won(m.Pi)+"원");
-        if(m.pgGoods>0) t.push("− PG "+won(m.pgGoods)+"원");
+        if(m.pgGoods>0) t.push("− 상품분 PG "+won(m.pgGoods)+"원");
         if(m.intoVatPay>0) t.push("− 부가세 "+won(m.intoVatPay)+"원");
         else if(m.intoVatPay<0) t.push("+ 부가세 환급 "+won(-m.intoVatPay)+"원");
         return t.join(" ")+"<br>테이크레이트 <b>"+pct(m.takeGross)+"</b> → 순 <b>"+pct(m.takeNet)+
@@ -763,65 +759,66 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
     }).join("");
 
     /* --- 원장 --- */
-    var baseLabel=V.feeBase==="price"?"판매가 "+won(m.P):"셀러매출 "+won(m.S);
+    var baseLabel="셀러매출 "+won(m.S);
     $("#ledgers").innerHTML=
       table("고객 기준",
         row("구매금액","+",m.P,"정상 판매가 (VAT 포함)")+
         row("셀러할인","−",m.Ds,"셀러 부담")+
         row("① 리뷰포인트 사용","−",m.RvCash,pts(m.RvP)+" × 1:1 · 보유분에서 먼저 차감")+
-        row("② 플랫폼 포인트 사용","−",m.InCash,pts(m.InP)+" ÷ "+m.pr+" · 리뷰포인트 부족분")+
+        row("② 플랫폼 포인트 전환 사용","−",m.InCash,pts(m.InP)+" ÷ "+m.pr+" · 리뷰포인트 부족분")+
         row("배송비","+",m.Sh,"상품가에 더해 결제")+
         row("실결제금액 (A)","=",m.A,"PG로 결제된 금액","total"))+
       table("셀러 기준",
         row("판매가","",m.P,"")+
         row("셀러할인","−",m.Ds,"")+
-        row("셀러 매출 (VAT 포함)","=",m.S,"실결제 + 플랫폼 포인트 보전분")+
+        row("셀러 매출 (VAT 포함)","=",m.S,"실결제 + 포인트 사용분 보전")+
         row("판매수수료 (공급가)","−",m.F,baseLabel+" × "+V.feeRate.toFixed(1)+"%")+
         row("판매수수료 부가세","−",m.Fv,"세금계산서 발행 · 플랫폼 매출")+
         row("상품분 정산","=",m.sellerGoods,"")+
         row("배송비","+",m.Sh,"판매수수료는 붙지 않는다")+
-        row("배송비분 PG 수수료","−",m.pgShip,"배송비 "+won(m.Sh)+" × "+V.pgRate.toFixed(1)+"% · 셀러 부담")+
+        row("결제수수료 (배송비분, 공급가)","−",m.pgShipSupply,"배송비 "+won(m.Sh)+" × "+V.pgRate.toFixed(1)+"% · 셀러 부담 · PG 비용 재청구")+
+        row("결제수수료 부가세","−",m.pgShipVatIn,"세금계산서 발행 · 셀러 매입세액 공제")+
         row("주문분 정산금액","=",m.sellerOrder,"리뷰비는 월 합산으로 별도 차감","total"))+
       table("PG 기준",
         row("입금금액","",m.A,"고객이 최종 지불한 금액")+
         row("PG 결제수수료","−",m.pg,"상품분 "+won(m.pgGoods)+" + 배송비분 "+won(m.pgShip))+
         row("셀러 정산금액","−",m.sellerOrder,"지급대행으로 셀러에게 지급")+
         row("플랫폼 실수취","=",m.intoNet,"부가세 납부 전","total"))+
-      table("포인트 배분 · ① 리뷰 → ② 플랫폼",
+      table("포인트 배분 · ① 리뷰 → ② 플랫폼 포인트 전환",
         row("포인트 결제액","",m.PiWant,"고객이 포인트로 내겠다고 한 금액")+
-        row("① 리뷰포인트에서","−",m.RvCash,"보유 "+pts(V.rvBal)+" 중 "+pts(m.RvP)+" 차감 · 1:1 · 잔여 "+pts(m.rvLeft))+
-        row("② 플랫폼 포인트에서","−",m.InCash,"부족분 · "+pts(m.InP)+" 필요 ("+m.pr+":1)")+
+        row("① 리뷰포인트에서","−",m.RvCash,"보유 "+pts(V.rvBal)+" 중 "+pts(m.RvP)+" 차감 · 1:1 · 잔여 "+pts(m.rvLeft)+" · 충당부채 감소")+
+        row("② 플랫폼 포인트 전환","−",m.InCash,"부족분 · "+pts(m.InP)+" 전환 ("+m.pr+":1) · 즉시 사용 · 판매촉진비")+
         row("배분 합계","=",m.Pi,"플랫폼가 셀러에게 보전하는 현금","total"))+
       table("플랫폼 잔여현금",
-        row("판매수수료 (부가세 포함)","+",m.F+m.Fv,"")+
-        row("포인트 사용분 보전","−",m.Pi,"① 리뷰 "+won(m.RvCash)+" + ② 플랫폼 "+won(m.InCash)+" · 부채 상계")+
-        row("PG 결제수수료 (상품분)","−",m.pgGoods,"상품 결제액 "+won(m.Ag)+" × "+V.pgRate.toFixed(1)+"% †")+
-        row("부가세 납부","−",m.intoVatPay,"매출세액 "+won(m.Fv)+" − PG 매입세액 "+won(m.pgGoodsVatIn))+
+        row("판매수수료 (부가세 포함)","+",m.F+m.Fv,"공급가 "+won(m.F)+" + VAT "+won(m.Fv))+
+        row("결제수수료 수취 (배송비분)","+",m.pgShip,"셀러 정산에서 차감 · 공급가 "+won(m.pgShipSupply)+" + VAT "+won(m.pgShipVatIn))+
+        row("포인트 사용분 보전","−",m.Pi,"① 리뷰 "+won(m.RvCash)+"(충당부채 감소) + ② 플랫폼 포인트 전환 "+won(m.InCash)+"(판매촉진비)")+
+        row("PG 결제수수료 (전체)","−",m.pgGoods+m.pgShip,"상품분 "+won(m.pgGoods)+" ("+won(m.Ag)+" × "+V.pgRate.toFixed(1)+"% + VAT) + 배송비분 "+won(m.pgShip)+" †")+
+        row("부가세 납부","−",m.intoVatPay,"매출세액 "+won(m.Fv+m.pgShipVatIn)+" − PG 매입세액 "+won(m.pgGoodsVatIn+m.pgShipVatIn)+" · 배송비분은 상계")+
         row("플랫폼 잔여현금","=",m.intoCash,"이 주문으로 플랫폼에 남는 돈","total"));
 
     /* --- 부가세 --- */
     $("#vatbox").innerHTML=
       table("셀러 부가세 (주문 1건)",
-        row("과세대상 (VAT 포함)","",m.taxIncl,(V.discMode==="enuri"?"셀러할인 차감 후":"셀러할인 차감 전 — 마일리지")+" + 배송비")+
+        row("과세대상 (VAT 포함)","",m.taxIncl,"판매가 − 셀러할인(에누리) + 배송비 · 플랫폼 보전 포인트는 포함")+
         row("과세표준","=",m.taxBase,"VAT 포함액 ÷ "+(1+m.vat).toFixed(2))+
         row("매출세액","",m.sellerVatOut,"")+
-        row("매입세액","−",m.sellerVatIn,"수수료 "+won(m.Fv)+" + 배송비분 PG "+won(m.pgShipVatIn)+" + 배송원가 "+won(m.shipCostVatIn))+
+        row("매입세액","−",m.sellerVatIn,"판매수수료 "+won(m.Fv)+" + 결제수수료(배송비분) "+won(m.pgShipVatIn)+" — 플랫폼 세금계산서"+(m.ShC>0?" + 배송원가 "+won(m.shipCostVatIn):""))+
         row("셀러 납부세액","=",m.sellerVatPay,"정산금에서 따로 빠져나간다","total"))+
       table("플랫폼 부가세 (주문 1건)",
         row("매출세액 (판매수수료)","",m.Fv,"셀러에게 세금계산서 발행")+
-        row("매입세액 (상품분 PG)","−",m.pgGoodsVatIn,"PG 수수료 "+won(m.pgGoods)+"의 VAT 분")+
-        row("플랫폼 납부세액","=",m.intoVatPay,"","total"));
+        row("매출세액 (결제수수료·배송비분)","+",m.pgShipVatIn,"같은 세금계산서 · PG 비용 재청구")+
+        row("매입세액 (PG 전체)","−",m.pgGoodsVatIn+m.pgShipVatIn,"PG사 세금계산서 · 상품분 "+won(m.pgGoodsVatIn)+" + 배송비분 "+won(m.pgShipVatIn))+
+        row("플랫폼 납부세액","=",m.intoVatPay,"배송비분은 매출·매입이 같아 상계","total"));
 
     /* --- 세금계산서 --- */
     $("#taxinv").innerHTML='<div class="ledgers">'+
       table("발행 대상",
         row("판매수수료 (공급가)","",m.mFee,won(m.F)+"원 × "+cnt(m.Nfee)+"건")+
-        row("판매수수료 부가세","+",m.mFeeVat,"")+
-        row("세금계산서 합계금액","=",m.mFee+m.mFeeVat,"플랫폼 → 셀러 발행","total"))+
-      table("발행 대상 아님",
-        row("리뷰비 (셀러 부담분)","",m.RB,"셀러가 고객에게 주는 포인트를 플랫폼가 대신 보관 → 예수금")+
-        row("리뷰포인트 플랫폼 부담분","",m.RBin,"무상지급 · 과세 대상 아님")+
-        row("부가세","",0,"매출이 아니므로 세액 없음","total"))+
+        row("판매수수료 부가세","+",m.mFeeVat,"공급가 합계 × "+pct(m.vat,0)+" · 월합계 반올림")+
+        row("결제수수료 (배송비분, 공급가)","+",m.mPgShipSupply,won(m.pgShipSupply)+"원 × "+cnt(m.Ne)+"건 · PG 비용 재청구")+
+        row("결제수수료 부가세","+",m.mPgShipVat,"공급가 합계 × "+pct(m.vat,0)+" · 셀러 매입세액 공제용")+
+        row("세금계산서 합계금액","=",m.mFee+m.mFeeVat+m.mPgShipCharge,"플랫폼 → 셀러 발행 · 공급월 말일 작성","total"))+
       '</div>';
 
     /* --- 월 --- */
@@ -829,38 +826,37 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
     $("#monthly").innerHTML=
       table("셀러 월 정산",
         row("셀러 매출 합계","",m.mSalesBase,won(m.S)+"원 × 유효 "+cnt(m.Ne)+"건")+
-        row("판매수수료 (VAT 포함)","−",m.mFee+m.mFeeVat,(V.feeRefund==="yes"?"환불분 반환":"환불분도 유지")+" · "+cnt(m.Nfee)+"건")+
-        row("리뷰비 (VAT 없음)","−",m.RB,cnt(m.reviewCnt)+"건 × "+pts(V.reviewPt)+" (1:1) × 셀러부담 "+pct(V.sellerShare/100,0)+" · 예수금")+
-        row("배송비 수취 (PG 차감 후)","+",m.mShipRecv,"배송비는 유효건만, 배송비분 PG는 전건")+
+        row("판매수수료 (VAT 포함)","−",m.mFee+m.mFeeVat,"구매확정 "+cnt(m.Nfee)+"건 · 환불 건은 수수료 없음")+
+        row("리뷰비 (VAT 없음)","−",m.RB,cnt(m.reviewCnt)+"건 × "+pts(V.reviewPt)+" (1:1) × 셀러부담 "+pct(V.sellerShare/100,0)+" · 당월 지급분 기준 · 매출 아님")+
+        row("배송비 수취 (PG 차감 후)","+",m.mShipRecv,"배송비 "+won(m.Sh*m.Ne)+" − 결제수수료(배송비분) "+won(m.mPgShipCharge)+" · 세금계산서 발행")+
         row("최종 정산금액","=",m.mSellerPayout,"부가세 납부 전","total")+
-        row("미지급금 (운전자본)","",m.payable,"정산 주기 "+V.payDays+"일 기준 근사"))+
+        row("월말 셀러 미지급금","",m.payable,"당월 구매확정분 전액 · 익월 "+V.payDays+"일 PG사 지급대행으로 지급 · 판매대금은 PG사 보관 — 플랫폼 가용 현금 아님 · 셀러 대기 평균 약 "+m.holdDays+"일"))+
       table("플랫폼 월 현금",
-        row("수수료 수취 (VAT 포함)","+",m.mFee+m.mFeeVat,"")+
-        row("리뷰비 수취 (예수금)","+",m.RB,"매출 아님 · 포인트부채 재원")+
-        row("포인트 사용분 보전","−",m.mReimb,"부채 상계 · 손익 아님")+
-        row("PG 결제수수료 (상품분)","−",m.mPgGoods,"† 환불 건도 부과·미반환 · 전 "+cnt(m.N)+"건")+
-        row("부가세 납부","−",m.mVatPay,"수수료 매출세액 "+won(m.mFeeVat)+" − PG 매입세액")+
+        row("수수료 수취 (VAT 포함)","+",m.mFee+m.mFeeVat,"판매수수료")+
+        row("결제수수료 수취 (배송비분)","+",m.mPgShipCharge,"셀러 정산에서 차감 · 세금계산서 발행 · PG 비용 재청구")+
+        row("리뷰비 회수 (셀러미수금)","+",m.RB,"정산 차감으로 회수 · 매출 아님")+
+        row("포인트 사용분 보전","−",m.mReimb,"리뷰 "+won(m.mRvUse)+"(충당부채 감소) + 플랫폼 포인트 전환 "+won(m.mInUse)+"(판매촉진비)")+
+        row("PG 결제수수료 (전체)","−",m.mPgGoods+m.mPgShipCharge,"† 상품분 "+won(m.mPgGoods)+" + 배송비분 "+won(m.mPgShipCharge)+" · 유효 "+cnt(m.Ne)+"건 · 환불 건은 승인취소로 반환")+
+        row("부가세 납부","−",m.mVatPay,"매출세액 "+won(m.mFeeVat+m.mPgShipVat)+" − PG 매입세액 "+won(m.mPgGoodsVatIn+m.mPgShipVat)+" · 배송비분은 상계")+
         row("플랫폼 잔여현금","=",m.mIntoCash,"","total"))+
-      table("포인트 부채 (당월 · 현금 환산 기준)",
-        row("리뷰포인트 지급","",m.reviewIssued,pts(m.reviewIssuedP)+" × 1:1 · 전체")+
-        row("  ├ 셀러 부담분","",m.RB,"셀러에게 받아둔 예수금 — 손익 아님")+
-        row("  └ 플랫폼 부담분","",m.RBin,"플랫폼 비용")+
-        row("플랫폼 포인트 지급","+",m.eventCash,pts(V.eventPt)+" ÷ "+m.pr+" · 플랫폼 100% 부담")+
-        row("당월 지급 합계","=",m.issued,"지갑 단위가 달라 현금으로만 합산한다")+
-        row("부채 설정액 (BS)","",m.liability,"지급 합계 × 예상 사용률 "+pct(V.useRate/100,0),"total")+
-        row("  ├ 손익 반영분","",m.liabPl,"플랫폼 부담 포인트만 비용")+
-        row("  └ 예수금 성격","",m.liabSeller,"셀러에게서 받아둔 몫")+
-        row("당월 사용 (부채 상계)","",m.mReimb,pts(m.RvP*m.Ne)+" + "+pts(m.InP*m.Ne)+" 사용"));
+      table("리뷰포인트 충당부채 (당월 · 일반기준)",
+        row("리뷰포인트 지급 → 충당부채 설정","+",m.reviewIssued,pts(m.reviewIssuedP)+" × 1:1 · 전액 100% (사용률 추정 없음)")+
+        row("  ├ 셀러 부담분","",m.RB,"셀러미수금 · 정산에서 차감 회수 · 매출 아님")+
+        row("  └ 당사 부담분","",m.RBin,"판매촉진비 · 발생 시 한 번만")+
+        row("당월 사용 → 충당부채 감소","−",m.mRvUse,pts(m.RvP*m.Ne)+" 사용 · 판매촉진비 다시 인식 안 함")+
+        row("당월 충당부채 순증감","=",m.rvProvNet,"유효기간 만료·탈퇴 소멸분 환입은 모델 밖","total"))+
+      table("플랫폼 포인트 (당월 · 일반기준)",
+        row("당월 적립","",m.eventCash,pts(V.eventPt)+" ÷ "+m.pr+" · <b>분개 없음</b> · 참고용")+
+        row("결제 전환 사용 → 판매촉진비","",m.mInUse,pts(m.InP*m.Ne)+" 전환 · 셀러 보전액 기준","total")+
+        row("기프티콘·기부 사용","",0,"실제 부담액을 비용 인식 · 모델 밖"));
 
-    var netRevI=m.mIntoRevenue-m.liabPl;
     $("#pnl").innerHTML=
-      '<thead><tr><th>항목</th><th>일반기준</th><th>K-IFRS</th><th class="memo" style="text-align:left">비고</th></tr></thead><tbody>'+
-      '<tr><td>판매수수료 매출</td><td>'+won(m.mIntoRevenue)+'</td><td>'+won(m.mIntoRevenue)+'</td><td class="memo">공급가 기준 · 리뷰비는 예수금이라 매출 아님</td></tr>'+
-      '<tr><td>포인트 매출차감</td><td>0</td><td class="neg">'+won(-m.liabPl)+'</td><td class="memo">K-IFRS 1115 문단 70~72 · 고객에게 지급할 대가</td></tr>'+
-      '<tr><td>순매출</td><td>'+won(m.mIntoRevenue)+'</td><td>'+won(netRevI)+'</td><td class="memo"></td></tr>'+
-      '<tr><td>판매촉진비 (포인트)</td><td class="neg">'+won(-m.liabPl)+'</td><td>0</td><td class="memo">플랫폼 부담분만 · 셀러 부담분은 예수금</td></tr>'+
-      '<tr><td>PG 결제수수료 <span class="dagger">†</span></td><td class="neg">'+won(-m.mPgGoodsSupply)+'</td><td class="neg">'+won(-m.mPgGoodsSupply)+'</td><td class="memo">공급가 기준 (매입세액 제외)</td></tr>'+
-      '<tr class="total"><td>영업이익 영향</td><td class="'+(m.opGeneral<0?"neg":"pos")+'">'+won(m.opGeneral)+'</td><td class="'+(m.opGeneral<0?"neg":"pos")+'">'+won(m.opGeneral)+'</td><td class="memo">동일 — 매출 규모만 다르다</td></tr>'+
+      '<thead><tr><th>항목</th><th>금액</th><th class="memo" style="text-align:left">비고</th></tr></thead><tbody>'+
+      '<tr><td>판매수수료 매출</td><td>'+won(m.mIntoRevenue)+'</td><td class="memo">공급가 기준 · 리뷰포인트 셀러부담금은 매출 아님</td></tr>'+
+      '<tr><td>판매촉진비 · 리뷰포인트</td><td class="neg">'+won(-m.RBin)+'</td><td class="memo">지급 시 당사 부담분만 · 사용 시 다시 인식하지 않음</td></tr>'+
+      '<tr><td>판매촉진비 · 플랫폼 포인트</td><td class="neg">'+won(-m.mInUse)+'</td><td class="memo">결제 전환 사용 시 셀러 보전액 · 적립 시 무분개</td></tr>'+
+      '<tr><td>PG 결제수수료 <span class="dagger">†</span></td><td class="neg">'+won(-m.mPgGoodsSupply)+'</td><td class="memo">공급가 기준 (매입세액 제외)</td></tr>'+
+      '<tr class="total"><td>영업이익 영향</td><td class="'+(m.opGeneral<0?"neg":"pos")+'">'+won(m.opGeneral)+'</td><td class="memo">일반기준 · K-IFRS 검토는 맨 아래 회계 검토 메모</td></tr>'+
       '</tbody>';
 
     drawBep(m);
@@ -870,7 +866,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
   function drawBep(m){
     var W=1200,H=300,L=92,R=20,T=24,B=48;
     var iw=W-L-R, ih=H-T-B;
-    var fixed=-V.eventPt*(V.useRate/100);
+    var fixed=m.fixed;   // compute()와 같은 값 — 선의 0 교차점과 손익분기 표시가 일치해야 한다
     var slope=m.slope;
     var maxN=Math.max(m.N*1.6,(m.bep||0)*1.6,100);
     maxN=Math.ceil(maxN/50)*50;
@@ -925,9 +921,13 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
     var y=+v.slice(0,4), mo=+v.slice(5,7);
     if(!y||!mo){ var d=new Date(); y=d.getFullYear(); mo=d.getMonth()+1; }
     var last=new Date(y,mo,0).getDate();
+    var next=(mo===12?(y+1)+"-01":y+"-"+pad(mo+1));
     return {y:y,m:mo,days:last,
       from:y+"-"+pad(mo)+"-01", to:y+"-"+pad(mo)+"-"+pad(last),
-      issue:(mo===12?(y+1)+"-01":y+"-"+pad(mo+1))+"-01"};
+      issue:next+"-01",                    // 정산서 발행일 = 익월 1일
+      taxDate:y+"-"+pad(mo)+"-"+pad(last), // 월합계 세금계산서 작성일자 = 공급월 말일 (부가세법 34조 3항)
+      taxDue:next+"-10",                   // 세금계산서 발급 기한 = 익월 10일
+      pay:next+"-"+pad(V.payDays)};        // 익월 지급일
   }
   function meta(){
     return {seller:$("#d_seller").value||"입점사", sellerNo:$("#d_sellerNo").value||"—",
@@ -939,38 +939,46 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
   function docSettleA(m){
     var P=period(), M=meta();
     var sales=m.P*m.Ne;                 // 할인 전 판매액
-    var fee=m.mFee+m.mFeeVat;           // 입점 수수료 (VAT 포함)
     var disc=m.Ds*m.Ne;                 // 셀러 부담 할인액
-    var ship=m.mShipRecv;               // 일반배송비 (PG 차감 후)
-    var pointDeduct=-m.RB;              // 셀러 부담 적립금 차감 (예수금 · VAT 없음)
-    var total=sales-fee-disc+ship+pointDeduct;
+    var fee=m.mFee+m.mFeeVat;           // 판매수수료 (VAT 포함)
+    var shipGross=m.Sh*m.Ne;            // 일반배송비 (총액)
+    var pointDeduct=-m.RB;              // 리뷰포인트 보상비용 분담금 (셀러미수금 회수 · VAT 없음)
+    // 줄 이름은 세금계산서 품목명과 맞춘다. 4번째 칸 "sub" = 소계(합계에 더하지 않음)
     var rows=[
-      ["정산 대상 (상품) 판매액",sales,"셀러할인 차감 전 · 유효 "+cnt(m.Ne)+"건"],
-      ["입점 수수료 (VAT 포함)",-fee,"공급가 "+won(m.mFee)+" + 세액 "+won(m.mFeeVat)],
-      ["세금계산서 조정금액",0,"리뷰비는 예수금이라 발행 대상 아님"],
-      ["세금계산서 발행금액",m.mFee,"판매수수료 공급가만"],
+      ["정산 대상 (상품) 판매액",sales,"판매가 "+won(m.P)+" × 유효 "+cnt(m.Ne)+"건 · 셀러할인 차감 전"],
       ["총 셀러부담할인액",-disc,won(m.Ds)+"원 × "+cnt(m.Ne)+"건"],
+      ["셀러 매출 소계",sales-disc,"판매수수료 부과 기준","sub"],
+      ["판매수수료 (VAT 포함)",-fee,"셀러 매출 × "+V.feeRate.toFixed(1)+"% = 공급가 "+won(m.mFee)+" + 세액 "+won(m.mFeeVat)],
       ["GAP"],
-      ["일반배송비",ship,"배송비 "+won(m.Sh*m.Ne)+" − 배송비분 PG "+won(m.pgShip*m.N)],
-      ["반품배송비",0,"모델 밖 — 협의 필요"],
-      ["교환배송비",0,"모델 밖 — 협의 필요"],
+      ["일반배송비",shipGross,"배송비 "+won(m.Sh)+" × "+cnt(m.Ne)+"건 · 판매수수료 없음"],
+      ["결제수수료 (배송비분, VAT 포함)",-m.mPgShipCharge,"배송비 × "+V.pgRate.toFixed(1)+"% = 공급가 "+won(m.mPgShipSupply)+" + 세액 "+won(m.mPgShipVat)],
+      ["반품배송비",0,"법정 기준 — 단순변심 소비자, 하자·오배송 판매자 부담 · 모델 밖"],
+      ["교환배송비",0,"법정 기준 — 반품배송비와 동일 · 모델 밖"],
       ["무료 반품 행사 보상",0,"해당 없음"],
       ["무료 교환 행사 보상",0,"해당 없음"],
       ["선환불 대손 처리 보상",0,"해당 없음"],
       ["페널티 정산금 차감",0,"해당 없음"],
-      ["셀러 부담 적립금 차감",pointDeduct,"리뷰포인트 셀러 부담분 "+won(m.RB)+" · 부가세 없음"],
+      ["리뷰포인트 보상비용 분담금",pointDeduct,"정산 대상 기간에 지급한 리뷰포인트 "+cnt(m.reviewCnt)+"건 × "+won(V.reviewPt)+"원 × 셀러 부담 "+pct(V.sellerShare/100,0)+" · 부가세 없음"],
       ["조정액 (기타 예외 등)",0,""]
     ];
-    return {title:"입점 수수료 월 정산서", sub:M.issuer+" → "+M.seller+" · "+P.from+" ~ "+P.to,
-      head:[["정산서 발행일",P.issue],["정산 대상 기간",P.from+" ~ "+P.to],
+    // 입금예정 총액 = 화면에 보이는 금액 줄의 합 (소계·참고 줄 제외) — 모델 값과 따로 계산해 검산이 의미를 갖게 한다
+    var total=rows.reduce(function(a,r){ return (r[0]==="GAP"||r[3]==="sub")?a:a+r[1]; },0);
+    var refs=[
+      ["세금계산서 공급가액",m.mFee+m.mPgShipSupply,"판매수수료 "+won(m.mFee)+" + 결제수수료(배송비분) "+won(m.mPgShipSupply)],
+      ["세금계산서 세액",m.mFeeVat+m.mPgShipVat,"작성일자 "+P.taxDate+" · 발급 기한 "+P.taxDue],
+      ["세금계산서 조정금액",0,"리뷰포인트 보상비용 분담금은 매출이 아니라 발행 대상 아님"]
+    ];
+    return {title:"셀러 월 정산서", sub:M.issuer+" → "+M.seller+" · "+P.from+" ~ "+P.to,
+      head:[["정산서 발행일",P.issue],["정산 대상 기간",P.from+" ~ "+P.to],["지급 예정일",P.pay],
             ["정산서 발행사 (등록번호)",M.issuer+" ("+M.issuerNo+")"],
             ["입점사 (등록번호)",M.seller+" ("+M.sellerNo+")"],["입점브랜드",M.brand]],
-      rows:rows, totalLabel:"입금예정 총액", total:total,
+      rows:rows, totalLabel:"입금예정 총액", total:total, refs:refs,
       check:["모델의 셀러 최종 정산금액",m.mSellerPayout],
-      notes:["※ 정산 대상 기준: 정산 대상 기간 내 구매확정이 된 주문의 판매액",
-             "※ 구매확정: 상품 배송완료 후 "+(V.payDays||0)+"일 경과",
-             "※ 반품·교환배송비, 보상·페널티 항목은 시뮬레이터 모델에 없어 0으로 둡니다.",
-             "※ 리뷰포인트는 셀러가 고객에게 주는 대가를 플랫폼가 대신 보관하는 예수금이므로 매출·세금계산서 대상이 아닙니다."]};
+      notes:["※ 정산 대상 기준: 정산 대상 기간(1일~말일) 내 구매확정이 된 주문의 판매액",
+             "※ 지급: 정산 대상 기간 구매확정분을 익월 "+V.payDays+"일("+P.pay+")에 PG사 지급대행으로 셀러에게 직접 지급",
+             "※ 반품·교환배송비는 전자상거래법 기준(단순변심 소비자 · 하자·오배송·표시광고 상이 판매자)으로 부담합니다. 보상·페널티 항목과 함께 시뮬레이터 모델에 없어 0으로 둡니다.",
+             "※ 리뷰포인트 보상비용 분담금은 구매회원의 구매후기 작성을 장려하려고 지급한 리뷰포인트 중 셀러가 분담하는 금액으로, 정산에서 차감해 회수합니다. 플랫폼 매출이 아니므로 세금계산서 대상이 아닙니다.",
+             "※ 리뷰는 구매확정 후 30일 안에 작성할 수 있어, 이 정산서의 리뷰비는 <b>정산 대상 기간에 지급된 리뷰포인트</b> 기준입니다. 전월 구매확정분의 리뷰가 포함될 수 있습니다."]};
   }
 
   // 업체B 일별 정산 — 월 수치를 일수로 균등 배분
@@ -986,9 +994,8 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
     var rows=[];
     for(var i=0;i<D;i++){
       var day=P.y+"-"+pad(P.m)+"-"+pad(i+1);
-      var done=new Date(P.y,P.m-1,i+1+(+V.payDays||0));
       var amt=per(mnum(m.mSellerPayout),i);
-      rows.push([day, done.getFullYear()+"-"+pad(done.getMonth()+1)+"-"+pad(done.getDate()),
+      rows.push([day, P.pay,   // 월 정산 — 어느 날 확정분이든 익월 지급일에 나간다
         amt, amt, 0, per(mnum(m.mSalesBase),i), per(mnum(m.mFee+m.mFeeVat),i),
         0, per(mnum(-m.RB),i), 0, 0, 0, 0, "일반정산"]);
     }
@@ -998,24 +1005,29 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
       totalLabel:"정산금액 합계", total:mnum(m.mSellerPayout),
       check:["모델의 셀러 최종 정산금액",m.mSellerPayout],
       notes:["※ 시뮬레이터는 월 단위 모델이라 일자별 실적이 없습니다. 월 합계를 "+D+"일로 균등 배분하고 잔차는 말일에 반영했습니다.",
-             "※ 정산완료일 = 각 일자 + 정산 주기 "+(V.payDays||0)+"일",
+             "※ 월 정산이라 모든 일자의 정산완료일은 익월 "+V.payDays+"일("+P.pay+")입니다.",
              "※ 빠른정산·지급보류·반품안심케어·우대수수료환급은 모델에 없어 0입니다.",
-             "※ 일별 공제/환급은 리뷰포인트 셀러 부담분(예수금)입니다. 부가세가 붙지 않습니다."]};
+             "※ 일별 공제/환급은 리뷰포인트 셀러 부담분(정산 차감 회수)입니다. 매출이 아니어서 부가세가 붙지 않습니다. 리뷰포인트 지급일 기준이라 전월 구매확정분의 리뷰가 포함될 수 있습니다."]};
   }
 
   // 세금계산서 (발행사 → 입점사)
   function docTax(m){
     var P=period(), M=meta();
     var rows=[
-      ["판매수수료",m.mFee,m.mFeeVat,won(m.F)+"원 × "+cnt(m.Nfee)+"건"]
+      ["판매수수료",m.mFee,m.mFeeVat,won(m.F)+"원 × "+cnt(m.Nfee)+"건"],
+      ["결제수수료 (배송비분)",m.mPgShipSupply,m.mPgShipVat,"배송비 "+won(m.Sh)+" × "+V.pgRate.toFixed(1)+"% = "+won(m.pgShipSupply)+"원 × "+cnt(m.Ne)+"건 · PG 비용 재청구"]
     ];
+    var supply=m.mFee+m.mPgShipSupply, taxAmt=m.mFeeVat+m.mPgShipVat;
     return {tax:true, title:"세금계산서 (공급자 → 공급받는자)",
-      sub:M.issuer+" → "+M.seller+" · 작성일자 "+P.issue,
-      head:[["작성일자",P.issue],["공급 기간",P.from+" ~ "+P.to],
+      sub:M.issuer+" → "+M.seller+" · 작성일자 "+P.taxDate+" (월합계)",
+      head:[["작성일자",P.taxDate+" — 공급월 말일 (월합계)"],["발급 기한",P.taxDue+" (익월 10일)"],["공급 기간",P.from+" ~ "+P.to],
             ["공급자 (등록번호)",M.issuer+" ("+M.issuerNo+")"],
             ["공급받는자 (등록번호)",M.seller+" ("+M.sellerNo+")"]],
-      rows:rows, supply:m.mFee, taxAmt:m.mFeeVat,
-      notes:["※ 리뷰포인트는 셀러가 고객에게 주는 대가를 플랫폼가 대신 보관하는 <b>예수금</b>입니다. 플랫폼 매출이 아니므로 세금계산서를 발행하지 않습니다 — 셀러 부담분 "+won(m.RB)+"원은 정산금에서 차감만 합니다.",
+      rows:rows, supply:supply, taxAmt:taxAmt, total:taxAmt,
+      check:["품목별 공급가액 × "+pct(m.vat,0)+" (월합계 반올림)",r0(m.mFee*m.vat)+r0(m.mPgShipSupply*m.vat)],
+      notes:["※ 월합계 세금계산서는 공급월 말일을 작성일자로 하고 익월 10일까지 발급합니다. 정산서 발행일(익월 1일)과 다릅니다.",
+             "※ 결제수수료(배송비분)는 플랫폼이 PG사에 낸 배송비분 결제수수료를 셀러에게 재청구한 것입니다. 이 세금계산서로 셀러가 매입세액을 공제받습니다. 플랫폼은 같은 금액을 PG 매입세액으로 공제하므로 부담은 0입니다.","※ 세액은 월 공급가 합계에 세율을 곱해 한 번만 반올림합니다. 건별 세액 "+won(m.Fv)+"원을 합산하면 "+won(m.mFeeVatPerOrder)+"원"+
+               (m.mFeeVatPerOrder===m.mFeeVat?"으로 같습니다.":"으로 "+won(m.mFeeVatPerOrder-m.mFeeVat)+"원 차이가 납니다."),"※ 리뷰포인트 셀러 부담분은 리뷰 보상비용 중 셀러가 분담하는 금액이며 <b>플랫폼 매출이 아닙니다</b>. 세금계산서를 발행하지 않고, 셀러 부담분 "+won(m.RB)+"원은 정산금에서 차감해 회수합니다.",
              "※ 플랫폼 부담 포인트는 무상지급이라 세금계산서·부가세 대상이 아닙니다.",
              VEN==="B"?"※ 업체B(일별 정산형)는 별도 세금계산서 양식이 없어 표준 양식으로 작성합니다.":""].filter(Boolean)};
   }
@@ -1034,6 +1046,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
       L.push("");
       d.rows.forEach(function(r){ if(r[0]!=="GAP") L.push(r[0]+"\t"+mnum(r[1])); });
       L.push(d.totalLabel+"\t"+mnum(d.total));
+      if(d.refs){ L.push(""); L.push("참고 (합계 미포함)"); d.refs.forEach(function(r){ L.push(r[0]+"\t"+mnum(r[1])); }); }
     }
     return L.join("\n");
   }
@@ -1067,15 +1080,22 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
       h+='<tr class="gap"><td colspan="3"></td></tr>';
       d.rows.forEach(function(r){
         if(r[0]==="GAP"){ h+='<tr class="gap"><td colspan="3"></td></tr>'; return; }
-        h+='<tr><td>'+r[0]+'</td><td class="n'+(r[1]===0?' zero':'')+'">'+won(r[1])+'</td>'+
+        h+='<tr'+(r[3]==="sub"?' class="subt"':'')+'><td>'+r[0]+'</td><td class="n'+(r[1]===0?' zero':'')+'">'+won(r[1])+'</td>'+
            '<td class="lbl" style="font-size:11.5px">'+(r[2]||"")+'</td></tr>';
       });
       h+='<tr class="sum"><td>'+d.totalLabel+'</td><td class="n">'+won(d.total)+'</td><td></td></tr>';
+      if(d.refs){
+        h+='<tr class="gap"><td colspan="3"></td></tr><tr class="refh"><td colspan="3">참고 · 합계 미포함</td></tr>';
+        d.refs.forEach(function(r){
+          h+='<tr class="ref"><td>'+r[0]+'</td><td class="n'+(r[1]===0?' zero':'')+'">'+won(r[1])+'</td>'+
+             '<td class="lbl" style="font-size:11.5px">'+(r[2]||"")+'</td></tr>';
+        });
+      }
       h+='</tbody></table>';
     }
     h+='</div>';
     if(d.check){
-      var ok=Math.abs(d.check[1]-d.total)<1;
+      var ok=d.check[1]===d.total && Number.isInteger(d.total);   // 원 미만 끝전도 불일치로 본다
       h+='<div class="doc-foot"><b style="color:var(--'+(ok?"pos":"neg")+')">'+(ok?"검산 일치":"검산 불일치")+'</b> — '+
          d.check[0]+' '+won(d.check[1])+'원'+(ok?'':' · 차이 '+won(d.total-d.check[1])+'원')+'</div>';
     }

@@ -746,7 +746,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
        s:"코호트 실측 M1 잔존 "+V.actRate+"% — <b class=\"wn\">63%가 한 달 만에 빠지는 단일 최대 누수</b>이고, K를 영구히 끌어올리는 유일한 저비용 레버입니다",
        l:"M1 잔존율 "+V.actRate+"% → "+(V.actRate+8)+"%", d:diff(altOv({actRate:Math.min(100,V.actRate+8)}))},
       {h:"기존 유저 유지 — 리텐션 캠페인으로 꼬리 이탈을 늦춘다",
-       s:"M13 이후 꼬리가 −4.5%/월로 새는 구간입니다. 월 효과는 작지만 유일하게 시간이 지날수록 커집니다",
+       s:"<span class=\"neg\">M13 이후 꼬리가 −4.5%/월로 새는 구간입니다. 월 효과는 작지만 유일하게 시간이 지날수록 커집니다</span>",
        l:"M1 이후 이탈률 "+V.churn+"% → "+Math.max(0.1,V.churn-0.5).toFixed(1)+"%", d:diff(altOv({churn:Math.max(0.1,V.churn-0.5)}))},
       {h:"알림톡 발송량을 늘려 신규 가입 모수를 키운다", rd:1,
        s:"K는 "+kcap().L.toFixed(2)+"배로 증폭되지만 <b class=\"wn\">매달 돈을 써야 유지됩니다</b> — 멈추는 달에 같이 멈춥니다",

@@ -322,7 +322,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
                 <li><b class="hl">직매입 · PB.</b> 마진율이 수수료율의 3~5배지만 재고 · 유통기한 · 반품 리스크를 플랫폼이 집니다. 요율이 가장 높게 잡히는 건기식이 후보이나, 같은 이유로 규제 · 표시광고 관리 비용이 함께 붙습니다.</li>
                 <li><b class="hl">풀필먼트 · 배송 마크업.</b> 지금 배송비는 전액 셀러와 고객 사이에 있어 플랫폼 기여가 0입니다. 물류를 끼면 배송비가 <b>PG 부과 대상(비용)에서 매출 줄로</b> 옮겨옵니다.</li>
                 <li><b class="hl">정기배송 · 멤버십 구독.</b> 사료 반복구매가 근거입니다. <b>구매자당 월 주문과 이탈률을 동시에</b> 건드리는 유일한 레버라 위 표에서 효율이 가장 좋고, 구독료 자체는 GMV와 무관한 고정 매출입니다.</li>
-                <li><b class="hl">결제 구조 개선.</b> PG 요율 재협상, 계좌이체 · 저요율 간편결제(PAYCO · 카카오페이 · SSGPAY · SK pay 2.3%) 유도. 계약서 VAT 표기는 별도로 확인됐습니다. 개발이 거의 없고 협의로 끝나므로 <b>가장 먼저 집행할 수 있는</b> 레버입니다.</li>
+                <li><b class="hl">결제 구조 개선.</b> 계좌이체 · 저요율 간편결제(PAYCO · 카카오페이 · SSGPAY · SK pay 2.3%) 유도. PG 요율은 KISPG 계약 2.3%로 이미 낮아 재협상 여지가 크지 않고, 계약서 VAT 표기도 확인됐습니다. 개발이 거의 없고 협의로 끝나므로 <b>가장 먼저 집행할 수 있는</b> 레버입니다.</li>
                 <li><b class="hl">카테고리 믹스 설계.</b> 요율을 올리지 않고도 가중평균 요율이 올라갑니다. 실행 방법은 입점 MD 목표를 GMV가 아니라 <b>요율 높은 카테고리의 GMV</b>로 주는 것입니다.</li>
               </ul>
             </div>
@@ -767,9 +767,6 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
        s:"기준월은 이미 전환 후라 월 증분은 0 — 효과는 전부 누적에 잡힙니다",
        l:V.sw+"개월차 → "+Math.max(1,V.sw-3)+"개월차", d:diff(altOv({sw:Math.max(1,V.sw-3)}))});
     LV.push({g:"비용 · 나가는 돈을 줄인다"});
-    LV.push({h:"PG 요율을 재협상한다", rd:1,
-       s:"개발 없이 협의로 끝나 가장 먼저 집행할 수 있습니다",
-       l:"PG "+V.pg+"% → "+Math.max(0,V.pg-0.3).toFixed(1)+"%", d:diff(altOv({pg:Math.max(0,V.pg-0.3)}))});
     LV.push({h:"플랫폼 부담 적립 포인트를 줄이거나 셀러 분담으로 넘긴다",
        l:"포인트 지급률 "+V.ptCost+"% → "+Math.max(0,V.ptCost-1)+"%", d:diff(altOv({ptCost:Math.max(0,V.ptCost-1)}))});
     LV.push({h:"포인트 · 간편결제 비중을 올려 PG 부과 대상을 줄인다",

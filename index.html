@@ -89,6 +89,7 @@ h1{font-family:var(--serif);font-weight:700;font-size:clamp(26px,4.4vw,38px);lin
 .grp .ctl:first-of-type{border-top:none}
 .ctl-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:9px}
 .ctl-top label{font-size:14.5px;font-weight:500;color:var(--ink)}
+.ctl.rd .ctl-top label{color:var(--neg);font-weight:600}
 .ctl-val{display:flex;align-items:baseline;gap:2px}
 .ctl-val input{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:16.5px;
   font-weight:600;color:var(--ink);background:transparent;border:none;border-bottom:1px solid transparent;
@@ -437,11 +438,11 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
   var SPEC=[
     {grp:"주문 1건"},
     {id:"price",label:"판매가",min:0,max:200000,step:500,unit:"원",help:"VAT 포함 소비자가"},
+    {id:"ship",label:"배송비 (평균)",min:0,max:50000,step:500,unit:"원",help:"셀러·상품별로 다르므로 평균 한 건. 판매수수료는 붙지 않고 PG 수수료만 차감해 셀러에게 전달한다"},
     {id:"sellerDisc",label:"셀러할인",min:0,max:100000,step:100,unit:"원",help:"셀러가 부담하는 즉시할인·쿠폰·자기적립 마일리지. 부가세법상 에누리라 <b>셀러 과세표준에서 차감</b>한다"},
-    {id:"ptPay",label:"포인트 결제액",min:0,max:100000,step:100,unit:"원",help:"고객이 포인트로 결제한 <b>현금 금액</b>. 아래 규칙으로 두 지갑에 자동 배분된다"},
+    {id:"ptPay",label:"포인트 결제액",rd:true,min:0,max:100000,step:100,unit:"원",help:"고객이 포인트로 결제한 <b>현금 금액</b>. 아래 규칙으로 두 지갑에 자동 배분된다"},
     {id:"rvBal",label:"보유 리뷰포인트",min:0,max:100000,step:100,unit:"P",help:"<b>차감 1순위.</b> 결제액을 이 잔액에서 먼저 빼고(1:1), 모자란 만큼만 플랫폼 포인트를 전환해 채운다"},
     {id:"ptRate",label:"플랫폼 포인트 전환비율",min:1,max:5,step:0.1,unit:"P = 1원",help:"결제 시 플랫폼 포인트 몇 P가 1원으로 전환되는가. 1.5면 1,500P → 1,000원. 전환분은 그 결제에서 즉시 쓰인다. 리뷰포인트에는 적용되지 않는다"},
-    {id:"ship",label:"배송비 (평균)",min:0,max:50000,step:500,unit:"원",help:"셀러·상품별로 다르므로 평균 한 건. 판매수수료는 붙지 않고 PG 수수료만 차감해 셀러에게 전달한다"},
     {id:"shipCost",label:"배송 원가 (셀러 참고)",min:0,max:50000,step:100,unit:"원",help:"셀러가 택배사에 내는 계약 단가. 셀러 수지를 볼 때만 넣는다 — <b>플랫폼 정산·손익에는 쓰지 않는다</b>. 0이면 미입력"},
     {id:"feeRate",label:"판매수수료율",min:0,max:30,step:0.5,unit:"%",help:"셀러 매출(판매가 − 셀러 부담 할인)에 곱한다. 플랫폼 포인트 결제분은 셀러에게 보전하므로 부과 대상에 남는다. 배송비에는 붙지 않는다"},
     {id:"pgRate",label:"PG 결제수수료율",min:0,max:6,step:0.1,unit:"%",help:"계약서 표기대로 <b>VAT 별도</b> 요율을 넣는다(KISPG 카드 2.3%, 간편결제 2.3~2.6%). 배송비 포함 총 결제액에 부과. 상품분은 플랫폼이, 배송비분은 셀러가 부담 †"},
@@ -500,7 +501,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
       });
       return;
     }
-    var el=document.createElement("div"); el.className="ctl";
+    var el=document.createElement("div"); el.className="ctl"+(s.rd?" rd":"");
     el.innerHTML='<div class="ctl-top"><label for="r_'+s.id+'">'+s.label+'</label>'+
       '<span class="ctl-val"><input type="number" id="n_'+s.id+'" aria-label="'+s.label+' 값" '+
       'min="'+s.min+'" max="'+s.max+'" step="'+s.step+'"><span class="u">'+s.unit+'</span></span></div>'+

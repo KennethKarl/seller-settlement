@@ -81,6 +81,7 @@ h1{font-family:var(--serif);font-weight:700;font-size:clamp(28px,4.4vw,40px);lin
 .grp .ctl:first-of-type{border-top:none}
 .ctl-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:9px}
 .ctl-top label{font-size:14.5px;font-weight:500}
+.ctl.rd .ctl-top label{color:var(--neg);font-weight:600}
 .ctl-val{display:flex;align-items:baseline;gap:2px}
 .ctl-val input{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:16.5px;
   font-weight:600;color:var(--ink);background:transparent;border:none;
@@ -406,9 +407,9 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
     {id:"signups",label:"누적 가입자",min:0,max:2000000,step:1000,unit:"명",help:"2026-08 실측 66만 명. <b>계산에는 쓰지 않습니다</b> — 커머스가 붙는 모수는 아래 MAU이고, 가입자는 늘어도 MAU는 K에서 멈춥니다"},
     {id:"mau",label:"활성 유저 (MAU)",min:0,max:1000000,step:1000,unit:"명",help:"2026-08 GA 실측 122,028명. <b>출발점일 뿐이며 수렴점은 아래 K입니다.</b> GA MAU는 비회원 트래픽을 포함할 수 있어 회원 MAU로 재산출이 필요합니다"},
     {id:"newSignup",label:"월 신규 가입",min:0,max:100000,step:1,unit:"명",help:"2025-08~2026-08 코호트 13개월 평균 19,699명. <b>3월 캠페인(39,219명)을 빼면 18,072명</b>입니다. 알림톡 발송이 −3.0%/월로 줄고 있어 이 값 자체가 하락 추세입니다"},
-    {id:"actRate",label:"M1 잔존율",min:0,max:100,step:0.5,unit:"%",help:"코호트 실측 평균 36.9%. 가입 당월(M0)은 99.9%가 쓰지만 <b>그 다음 달에 63%가 한 번에 빠집니다.</b> 전체 누수의 대부분이 이 한 곳에 몰려 있습니다"},
+    {id:"actRate",label:"M1 잔존율",rd:true,min:0,max:100,step:0.5,unit:"%",help:"코호트 실측 평균 36.9%. 가입 당월(M0)은 99.9%가 쓰지만 <b>그 다음 달에 63%가 한 번에 빠집니다.</b> 전체 누수의 대부분이 이 한 곳에 몰려 있습니다"},
     {id:"churn",label:"M1 이후 월 이탈률",min:0.5,max:20,step:0.1,unit:"%",help:"첫 달을 넘긴 유저의 이탈률. <b>2%가 아니라 6.2%입니다.</b> M8 이후 13%대가 바닥처럼 보이지만 실제로는 −4.5%/월로 새는 중이고, MAU 수지에서 역산한 블렌디드 이탈률 15.6%와 이 값이 서로 맞습니다"},
-    {id:"conv",label:"월 구매 전환율",min:0,max:20,step:0.1,unit:"%",help:"<b>미검증 가정.</b> 활성 유저 중 그 달에 한 번이라도 구매한 비율"},
+    {id:"conv",label:"월 구매 전환율",rd:true,min:0,max:20,step:0.1,unit:"%",help:"<b>미검증 가정.</b> 활성 유저 중 그 달에 한 번이라도 구매한 비율"},
     {id:"opb",label:"구매자당 월 주문",min:0.5,max:6,step:0.1,unit:"건",help:"<b>미검증 가정</b>"},
     {grp:"주문"},
     {id:"aov",label:"평균 객단가",min:5000,max:120000,step:1000,unit:"원",help:"상품가 · VAT 포함"},
@@ -421,7 +422,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
     {id:"ptRate",label:"포인트 환산비율",min:1,max:5,step:0.1,unit:"P = 1원"},
     {id:"ptBurn",label:"월 소진율",min:0,max:30,step:0.5,unit:"%",help:"<b>기본 0%</b> — 소멸 전제로 제외. 유효기간 집행이 늦어져 실제로 쓰이는 경우를 보려면 올려보십시오"},
     {grp:"비용"},
-    {id:"pg",label:"PG 결제수수료율",min:0,max:8,step:0.1,unit:"%",help:"고객 실결제액 기준 · 계약서 표기대로 <b>VAT 별도</b> 요율을 넣는다. KISPG 카드 2.3%, 간편결제는 수단별 2.3~2.6%"},
+    {id:"pg",label:"PG 결제수수료율",rd:true,min:0,max:8,step:0.1,unit:"%",help:"고객 실결제액 기준 · 계약서 표기대로 <b>VAT 별도</b> 요율을 넣는다. KISPG 카드 2.3%, 간편결제는 수단별 2.3~2.6%"},
     {id:"ptCost",label:"포인트 지급률",min:0,max:15,step:0.5,unit:"%",help:"GMV 대비 플랫폼 부담분. 셀러 부담 리뷰포인트는 예수금이라 제외"},
     {id:"fixed",label:"증분 고정비 (월)",min:0,max:300000000,step:1000000,unit:"원",help:"<b>기존 인력으로 진행하면 0입니다.</b> 0이면 화면의 숫자는 영업이익이 아니라 <b>공헌이익</b>(수수료 매출 − PG − 포인트)입니다. 전담 인력을 새로 뽑는다면 그 비용만 넣으십시오"},
     {grp:"기간"},
@@ -436,7 +437,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
     if(s.grp){ cur=document.createElement("div"); cur.className="grp";
       var h=document.createElement("div"); h.className="grp-label"; h.textContent=s.grp;
       cur.appendChild(h); host.appendChild(cur); return; }
-    var el=document.createElement("div"); el.className="ctl";
+    var el=document.createElement("div"); el.className="ctl"+(s.rd?" rd":"");
     el.innerHTML='<div class="ctl-top"><label for="r_'+s.id+'">'+s.label+'</label>'+
       '<span class="ctl-val"><input type="number" id="n_'+s.id+'" aria-label="'+s.label+'" '+
       'min="'+s.min+'" max="'+s.max+'" step="'+s.step+'"><span class="u">'+s.unit+'</span></span></div>'+

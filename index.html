@@ -403,7 +403,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
       </section>
 
       <footer>
-        <span class="dagger">†</span> PG 결제수수료율은 가정값입니다. 실제 계약 요율로 바꿔 쓰십시오.<br>
+        <span class="dagger">†</span> PG 결제수수료율 기본값은 KISPG 카드 2.3%(VAT 별도)입니다. 간편결제는 수단별로 2.3~2.6%(삼성·애플페이 2.6%)이고, 카카오페이 머니·네이버페이 포인트 요율은 아직 미수령입니다.<br>
         모든 금액은 원 단위 · ROUND(x, 0) 반올림. 부가세는 VAT 포함 금액에서 역산합니다. 월 집계에서 수수료·PG는 건별 금액 × 건수, 세액은 월 공급가 합계 × 세율로 한 번만 반올림합니다.
       </footer>
     </main>
@@ -422,7 +422,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
 
   // 화면 기본값은 중립 예시다. 실제 운영 조건은 코드에 두지 않고 임베드 주소에만 싣는다.
   var BASE={price:20000,sellerDisc:2000,rvBal:500,ptPay:1000,ptRate:1.5,ship:3000,shipCost:0,
-            feeRate:10,pgRate:2.5,vat:10,
+            feeRate:10,pgRate:2.3,vat:10,
             orders:1000,refundRate:5,reviewRate:20,reviewPt:500,sellerShare:50,
             eventPt:1500000,payDays:15};
   // 최소 조건: 배송비·환불·PG 없음, 주문 1건, 리뷰 0건
@@ -444,7 +444,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
     {id:"ship",label:"배송비 (평균)",min:0,max:50000,step:500,unit:"원",help:"셀러·상품별로 다르므로 평균 한 건. 판매수수료는 붙지 않고 PG 수수료만 차감해 셀러에게 전달한다"},
     {id:"shipCost",label:"배송 원가 (셀러 참고)",min:0,max:50000,step:100,unit:"원",help:"셀러가 택배사에 내는 계약 단가. 셀러 수지를 볼 때만 넣는다 — <b>플랫폼 정산·손익에는 쓰지 않는다</b>. 0이면 미입력"},
     {id:"feeRate",label:"판매수수료율",min:0,max:30,step:0.5,unit:"%",help:"셀러 매출(판매가 − 셀러 부담 할인)에 곱한다. 플랫폼 포인트 결제분은 셀러에게 보전하므로 부과 대상에 남는다. 배송비에는 붙지 않는다"},
-    {id:"pgRate",label:"PG 결제수수료율",min:0,max:6,step:0.1,unit:"%",help:"계약서 표기대로 <b>VAT 별도</b> 요율을 넣는다(예: 2.5% + VAT). 배송비 포함 총 결제액에 부과. 상품분은 플랫폼이, 배송비분은 셀러가 부담 †"},
+    {id:"pgRate",label:"PG 결제수수료율",min:0,max:6,step:0.1,unit:"%",help:"계약서 표기대로 <b>VAT 별도</b> 요율을 넣는다(KISPG 카드 2.3%, 간편결제 2.3~2.6%). 배송비 포함 총 결제액에 부과. 상품분은 플랫폼이, 배송비분은 셀러가 부담 †"},
     {id:"vat",label:"부가세율",min:0,max:20,step:1,unit:"%"},
     {grp:"월간"},
     {id:"orders",label:"당월 주문 건수",min:0,max:5000,step:10,unit:"건",help:"위 주문 1건이 이만큼 반복된다고 가정"},
@@ -554,7 +554,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
     var feeBaseAmt=S;   // 수수료 부과 기준 = 셀러 매출(셀러 부담 할인만 차감, 플랫폼 포인트 보전분 포함)
     var F=r0(feeBaseAmt*fr), Fv=r0(F*vat);
 
-    // PG 요율은 계약서 표기대로 VAT 별도("2.5% + VAT") — 공급가를 먼저 구하고 VAT를 더한다
+    // PG 요율은 계약서 표기대로 VAT 별도("2.3% + VAT") — 공급가를 먼저 구하고 VAT를 더한다
     var pgGoodsSupply=r0(Ag*pgr), pgShipSupply=r0(Sh*pgr);
     var pgGoodsVatIn=r0(pgGoodsSupply*vat);     // 플랫폼 매입세액
     var pgShipVatIn=r0(pgShipSupply*vat);       // 셀러 매입세액

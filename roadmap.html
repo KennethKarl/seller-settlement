@@ -184,6 +184,7 @@ svg{display:block;width:100%;height:auto}
 b.hl{color:var(--hl);font-weight:600}
 b.wn{color:var(--warn);font-weight:600}
 #lvrTbl td.how{font-weight:600}
+#lvrTbl td.how.rd{color:var(--neg)}
 #lvrTbl td.how small{font-weight:400}
 #lvrTbl th.op{background:color-mix(in srgb,var(--hl) 8%,var(--surface-3));color:var(--hl);font-weight:600}
 #lvrTbl td.op{background:color-mix(in srgb,var(--hl) 7%,var(--surface));font-weight:700;font-size:14.5px}
@@ -652,10 +653,10 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
       {h:"가입 첫 달 온보딩을 고쳐 이탈 지점을 통과시킨다",
        s:"70%가 빠지는 구간이라 여기가 가장 개선 여지가 큽니다",
        l:"신규 활성화율 "+V.actRate+"% → "+(V.actRate+10)+"%", d:diff(altOv({actRate:Math.min(100,V.actRate+10)}))},
-      {h:"기존 유저 유지 — 리텐션 캠페인으로 이탈을 늦춘다",
+      {h:"기존 유저 유지 — 리텐션 캠페인으로 이탈을 늦춘다", rd:1,
        s:"월 효과는 작지만 유일하게 시간이 지날수록 커집니다",
        l:"월 이탈률 "+V.churn+"% → "+Math.max(0,V.churn-0.5)+"%", d:diff(altOv({churn:Math.max(0,V.churn-0.5)}))},
-      {h:"커머스를 쓸 활성 유저 자체를 늘린다",
+      {h:"커머스를 쓸 활성 유저 자체를 늘린다", rd:1,
        l:"활성 유저 +1만 명", d:diff(altOv({mau:V.mau+10000}))},
       {g:"요율 · 같은 주문에서 더 받는다"},
       {h:"전환 후 요율을 전 카테고리 1pp씩 더 올린다",
@@ -670,7 +671,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
        s:"기준월은 이미 전환 후라 월 증분은 0 — 효과는 전부 누적에 잡힙니다",
        l:V.sw+"개월차 → "+Math.max(1,V.sw-3)+"개월차", d:diff(altOv({sw:Math.max(1,V.sw-3)}))});
     LV.push({g:"비용 · 나가는 돈을 줄인다"});
-    LV.push({h:"PG 요율을 재협상한다",
+    LV.push({h:"PG 요율을 재협상한다", rd:1,
        s:"개발 없이 협의로 끝나 가장 먼저 집행할 수 있습니다",
        l:"PG "+V.pg+"% → "+Math.max(0,V.pg-0.3).toFixed(1)+"%", d:diff(altOv({pg:Math.max(0,V.pg-0.3)}))});
     LV.push({h:"플랫폼 부담 적립 포인트를 줄이거나 셀러 분담으로 넘긴다",
@@ -697,7 +698,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
     var lh='<thead><tr><th>방법</th><th>움직이는 값</th><th>월 GMV</th><th>월 수수료 매출</th><th class="op">월 '+PL+'</th><th>기간 누적</th></tr></thead>';
     var lb=LV.map(function(x){
       if(x.g) return '<tr class="grp-row"><td colspan="6">'+x.g+'</td></tr>';
-      return '<tr'+(x._rk?' class="top"':'')+'><td class="how">'+(x._rk?'<span class="rk">TOP '+x._rk+'</span>':'')+
+      return '<tr'+(x._rk?' class="top"':'')+'><td class="how'+(x.rd?' rd':'')+'">'+(x._rk?'<span class="rk">TOP '+x._rk+'</span>':'')+
         x.h+(x.s?'<small>'+x.s+'</small>':'')+'</td><td class="lvr">'+lv(x.l)+'</td>'+
         '<td>'+dl(x.d.gmv)+'</td><td>'+dl(x.d.fee)+'</td><td class="op">'+dl(x.d.op)+'</td><td>'+dl(x.d.cum)+'</td></tr>';
     }).join("");

@@ -315,9 +315,9 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
 </section>
 
 <section>
-<div class="sec-head"><h2>연내 — 2026년에 나오는 숫자</h2><span class="note">12월 말 오픈 기준</span></div>
+<div class="sec-head"><h2>연내 — 2026년에 나오는 숫자</h2><span class="note">2027년 1월 말 오픈 기준</span></div>
 <div class="sec-body">
-<p class="lead">오픈이 <b>12월 말</b>이면 2026년에 쌓이는 매출은 <b>며칠분</b>입니다. 연내 성과는 매출액보다 <b>작동하는 몰과 확보된 셀러·상품</b>으로 보는 것이 정확합니다.</p>
+<p class="lead">오픈이 <b>2027년 1월 말</b>로 밀려 <b>2026년에 쌓이는 매출은 없습니다.</b> 정상 가동 첫 달(1개월차)은 <b>2027년 2월</b>입니다. 연내 성과는 매출액이 아니라 <b>오픈 준비를 마친 몰과 확보된 셀러·상품</b>으로 봐야 합니다.</p>
 <div class="scrollx" style="max-height:none"><table class="tbl" id="ckTbl"></table></div>
 <div class="alerts" id="ckAlerts" style="margin:18px 0 0"></div>
 </div>
@@ -374,6 +374,8 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
   var $=function(s){return document.querySelector(s)};
   var cnt=function(x){return Math.round(x).toLocaleString("ko-KR")};
   var pct=function(x,d){return (x*100).toFixed(d===undefined?1:d)+"%"};
+  // ym: 개월차 → 달력 월. 2027년 1월 말 오픈이라 1개월차 = 2027-02
+  function ym(t){var m=1+t-1; return (2027+Math.floor(m/12))+"-"+("0"+(m%12+1)).slice(-2);}
   function money(v){
     var a=Math.abs(v), s=v<0?"−":"";
     if(a>=100000000) return s+(a/100000000).toFixed(a>=1000000000?0:1)+"억";
@@ -556,7 +558,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
         'PG <b>'+V.pg+'%</b> · 누적 PG 비용 <b>'+money(r.cum-r.netCum)+'원</b><br>'+
         '목표 '+V.target+'억 대비 <b class="'+(rt>=1?"pos":"neg")+'">'+pct(rt,1)+'</b></span></div>';
     }
-    $("#decide").innerHTML=card("6개월차",A[i6])+card("12개월차",A[i12])+card(A.length+"개월차",A[last]);
+    $("#decide").innerHTML=card("6개월차 · "+ym(i6+1),A[i6])+card("12개월차 · "+ym(i12+1),A[i12])+card(A.length+"개월차 · "+ym(A.length),A[last]);
 
     var aa=[];
     aa.push('<div class="alert"><b>요율 전환 효과.</b> '+(V.sw-1)+'개월차 월 수수료 매출 <span class="num">'+money(A[Math.min(V.sw-2,last)].fee)+'</span>원 → '+V.sw+'개월차 <span class="num">'+money(A[Math.min(V.sw-1,last)].fee)+'</span>원. 같은 주문량에서 <b>'+money(A[Math.min(V.sw-1,last)].fee-A[Math.min(V.sw-2,last)].fee)+'원</b>이 더 들어옵니다 — 전환 시점은 좌측에서 조절됩니다.</div>');
@@ -571,15 +573,14 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
     $("#noteFee").textContent="요율 전환 "+V.sw+"개월차";
     $("#noteCum").textContent="12개월 "+money(A[i12].cum)+"원 · "+A.length+"개월 "+money(A[last].cum)+"원";
 
-    /* 연내 체크포인트 — 12월 말 오픈이면 2026년은 며칠분 */
-    var m1A=A[0].fee, days=4;
-    var ck=[["2026년 수수료 매출","약 "+money(m1A*days/30)+"원","12/28 오픈 가정 · 영업 "+days+"일분"],
-            ["2026년 거래액","약 "+money(A[0].gmv*days/30)+"원","같은 기준"],
-            ["월 주문 (오픈 1개월차)",cnt(A[0].orders)+"건","정상 가동 첫 달 기준"],
-            ["연내 실제 성과물","작동하는 몰 · 확보된 셀러·SKU","연내 성과는 매출보다 이쪽입니다"]];
+    /* 연내 체크포인트 — 2027년 1월 말 오픈이라 2026년 영업일 없음 */
+    var ck=[["2026년 수수료 매출","0원","2027년 1월 말 오픈 · 연내 영업일 없음"],
+            ["2026년 거래액","0원","같은 기준"],
+            ["월 주문 (1개월차 · "+ym(1)+")",cnt(A[0].orders)+"건","정상 가동 첫 달 기준"],
+            ["연내 실제 성과물","오픈 준비를 마친 몰 · 확보된 셀러·SKU","연내 성과는 매출이 아니라 이쪽입니다"]];
     $("#ckTbl").innerHTML='<thead><tr><th>항목</th><th>값</th><th style="text-align:left">기준</th></tr></thead><tbody>'+
       ck.map(function(r,i){return '<tr'+(i===3?' class="mark"':'')+'><td class="how">'+r[0]+'</td><td>'+r[1]+'</td><td style="text-align:left;font-family:var(--sans)">'+r[2]+'</td></tr>'}).join("")+'</tbody>';
-    $("#ckAlerts").innerHTML='<div class="alert warn"><b>2026년 매출은 영업 '+days+'일분이라 규모로 말할 숫자는 아닙니다.</b> 어떤 요율이어도 자릿수가 달라지지 않습니다. 연내 성과는 <b>①작동하는 몰 ②확보된 셀러·SKU 수</b>입니다.</div>';
+    $("#ckAlerts").innerHTML='<div class="alert warn"><b>2026년 매출은 0원입니다.</b> 오픈이 2027년 1월 말이라 요율과 무관하게 연내에 들어오는 수수료가 없습니다. 연내 성과는 <b>①오픈 준비를 마친 몰 ②확보된 셀러·SKU 수</b>입니다.</div>';
 
     /* 목표 역산 */
     var T=V.target*1e8;

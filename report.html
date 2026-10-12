@@ -552,6 +552,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
           '<div><div class="k">PG 차감 후 수수료</div><div class="v'+(r.netCum<0?" neg":"")+'">'+money(r.netCum)+'원</div></div>'+
         '</div>'+
         '<span class="sub">활성 유저 <b>'+cnt(r.users)+'</b>명 · 월 주문 <b>'+cnt(r.orders)+'</b>건 · 요율 <b>'+pct(r.rate)+'</b><br>'+
+        '월 구매 전환율 <b>'+V.conv+'%</b> · 구매자당 월 주문 <b>'+V.opb+'</b>건 · 평균 객단가 <b>'+cnt(V.aov)+'</b>원<br>'+
         'PG <b>'+V.pg+'%</b> · 누적 PG 비용 <b>'+money(r.cum-r.netCum)+'원</b><br>'+
         '목표 '+V.target+'억 대비 <b class="'+(rt>=1?"pos":"neg")+'">'+pct(rt,1)+'</b></span></div>';
     }

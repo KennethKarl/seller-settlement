@@ -559,7 +559,6 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
     $("#decide").innerHTML=card("6개월차",A[i6])+card("12개월차",A[i12])+card(A.length+"개월차",A[last]);
 
     var aa=[];
-    aa.push('<div class="alert warn"><b>첫 '+(V.sw-1)+'개월 누적 수수료 매출은 '+money(A[Math.min(V.sw-2,last)].cum)+'원입니다.</b> 인건비·제반비용을 넣지 않은 숫자입니다. 적자가 쌓인다는 뜻이 아니라 <b>규모가 아직 작다</b>는 뜻입니다.</div>');
     aa.push('<div class="alert"><b>요율 전환 효과.</b> '+(V.sw-1)+'개월차 월 수수료 매출 <span class="num">'+money(A[Math.min(V.sw-2,last)].fee)+'</span>원 → '+V.sw+'개월차 <span class="num">'+money(A[Math.min(V.sw-1,last)].fee)+'</span>원. 같은 주문량에서 <b>'+money(A[Math.min(V.sw-1,last)].fee-A[Math.min(V.sw-2,last)].fee)+'원</b>이 더 들어옵니다 — 전환 시점은 좌측에서 조절됩니다.</div>');
     aa.push('<div class="alert"><b>12개월 누적으로도 목표 '+V.target+'억의 '+pct(((targetBasis==="fee")?A[i12].cum:A[i12].gmvCum)/(V.target*1e8),1)+' 수준입니다.</b> 이 격차는 요율로는 메워지지 않습니다 — 아래 「목표 역산」 참고.</div>');
     $("#askAlerts").innerHTML=aa.join("");

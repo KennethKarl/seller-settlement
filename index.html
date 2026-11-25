@@ -134,6 +134,13 @@ section{background:var(--surface);border:1px solid var(--line);border-radius:6px
 .stat .who{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
 .stat .big{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:30px;font-weight:600;
   line-height:1.15;letter-spacing:-.02em}
+.fold>summary{cursor:pointer;list-style:none}
+.fold>summary::-webkit-details-marker{display:none}
+.fold>summary h2::before{content:"▸";display:inline-block;width:1.2em;color:var(--accent)}
+.fold[open]>summary h2::before{content:"▾"}
+.fold>summary:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.fold:not([open])>summary{border-bottom:none}
+.stat .sub .calc{display:block;margin-top:8px;padding-top:8px;border-top:1px solid var(--line);font-size:13px;color:var(--ink-3)}
 .stat .sub{font-size:14px;color:var(--ink-2);line-height:1.5}
 .stat .sub b{font-family:var(--mono);font-weight:600;color:var(--ink)}
 .pos{color:var(--pos)} .neg{color:var(--neg)}
@@ -270,6 +277,19 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
     <main class="results">
       <section aria-label="핵심 지표">
         <div class="stats" id="stats"></div>
+      </section>
+
+      <section>
+        <details class="fold" id="reverseFold" open>
+        <summary class="sec-head">
+          <h2>역산 · 결과에서 거꾸로</h2>
+          <span class="note">주문 1건 · 남은 돈에 뗀 돈을 다시 더해 원래 금액과 맞는지 봅니다</span>
+        </summary>
+        <div class="sec-body">
+          <div class="ledgers" id="reverse"></div>
+          <div style="margin-top:26px"><div class="scrollx"><table class="pnl" id="reverseVat"></table></div></div>
+        </div>
+        </details>
       </section>
 
       <section>
@@ -694,7 +714,15 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
         d += cuts.length ? " − "+cuts.join(" − ")+" (정상가 대비 <b>"+pct(discRate)+"</b> 할인)" : " (할인 없음)";
         return d;
       })())+
-      tile(m.ShC>0?"셀러 · 부가세·배송원가 후":"셀러 · 부가세 후","₩"+won(m.sellerNet),m.sellerNet<0?"neg":"", "정산 "+won(m.sellerOrder)+"원 − 부가세 "+won(m.sellerVatPay)+"원"+(m.ShC>0?" − 배송원가 "+won(m.ShC)+"원":"")+" · 판매가의 <b>"+pct(m.sellerKeep)+"</b>")+
+      tile(m.ShC>0?"셀러 · 부가세·배송원가 후":"셀러 · 부가세 후","₩"+won(m.sellerNet),m.sellerNet<0?"neg":"", (function(){
+        var vatPct=Math.round(m.vat*100);
+        return "정산 "+won(m.sellerOrder)+"원 − 부가세 "+won(m.sellerVatPay)+"원"+(m.ShC>0?" − 배송원가 "+won(m.ShC)+"원":"")+" · 판매가의 <b>"+pct(m.sellerKeep)+"</b>"+
+          '<span class="calc"><b>정산 '+won(m.sellerOrder)+'</b> = 판매가 '+won(m.P)+(m.Ds>0?' − 셀러할인 '+won(m.Ds):'')+
+            ' − 상점 수수료 '+won(m.Fg)+(m.Sh>0?' + 배송비 '+won(m.Sh)+' − 배송비 PG '+won(m.pgShip):'')+'</span>'+
+          '<span class="calc"><b>부가세 '+won(m.sellerVatPay)+'</b> = 매출세액 '+won(m.sellerVatOut)+' − 매입세액 '+won(m.sellerVatIn)+
+            '<br>매출세액 = 과세대상 '+won(m.taxIncl)+' ÷ '+(1+m.vat).toFixed(2)+' × '+vatPct+'%'+
+            '<br>매입세액 = 상점 수수료 '+won(m.Fv)+(m.Sh>0?' + 배송비 PG '+won(m.pgShipVatIn):'')+(m.ShC>0?' + 배송원가 '+won(m.shipCostVatIn):'')+'</span>';
+      })())+
       tile("플랫폼 · 건당 남는 현금","₩"+won(m.intoCash),m.intoCash<0?"neg":"pos", (function(){
         var t=["상점 수수료 "+won(m.F+m.Fv)+"원(VAT 포함)"];
         if(m.pgGoods>0) t.push("− 상품분 PG "+won(m.pgGoods)+"원");
@@ -712,6 +740,55 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
       '<tr><td>순 테이크레이트</td><td>(수수료+VAT−포인트 보전) ÷ 상품 실결제액</td><td>'+pct(m.takeNet)+'</td><td class="memo">PG가 플랫폼 앞으로 넘겨주는 몫. PG·부가세 차감 전</td></tr>'+
       '<tr class="total"><td>플랫폼 실질</td><td>위에서 상품분 PG·부가세까지 차감</td><td class="'+(m.realRate<0?"neg":"pos")+'">'+pct(m.realRate)+'</td><td class="memo">건당 '+won(m.intoCash)+'원. 실제로 남는 돈</td></tr>'+
       '</tbody>';
+
+    /* --- 역산: 결과 값에서 출발해 다시 더한다. 검산은 모델의 입력 쪽 값과 비교한다 --- */
+    var ok=function(v,t,nm){ return v===t?"일치 · "+nm+" "+won(t):"불일치 · "+nm+" "+won(t)+" · 차이 "+won(v-t); };
+    var rvSeller=m.sellerNet+m.ShC+m.sellerVatPay;
+    var rvPrice=rvSeller+m.pgShip-m.Sh+m.Fg+m.Ds;
+    var rvFee=m.intoCash+m.intoVatPay+m.pgGoods+m.Pi;
+    var rvPaid=rvSeller+m.intoCash+m.intoVatPay+m.pg;
+    var rvList=rvPaid+m.Pi+m.Ds-m.Sh;
+    var fr0=V.feeRate/100, rvBase=fr0>0?r0(rvFee/fr0):null;
+    $("#reverse").innerHTML=
+      table("① 셀러 → 판매가",
+        row("셀러 · 부가세 후","",m.sellerNet,"출발")+
+        (m.ShC>0?row("배송원가","+",m.ShC,"셀러가 택배사에 낸 돈"):"")+
+        row("셀러 부가세","+",m.sellerVatPay,"")+
+        row("정산금액","=",rvSeller,ok(rvSeller,m.sellerOrder,"주문분 정산금액"))+
+        (m.Sh>0?row("배송비 PG","+",m.pgShip,"")+row("배송비","−",m.Sh,""):"")+
+        row("상점 수수료","+",m.Fg,"VAT 포함")+
+        (m.Ds>0?row("셀러할인","+",m.Ds,""):"")+
+        row("판매가","=",rvPrice,ok(rvPrice,m.P,"판매가"),"total"))+
+      table("② 플랫폼 → 수수료 기준액",
+        row("플랫폼 · 남는 현금","",m.intoCash,"출발")+
+        row("플랫폼 부가세","+",m.intoVatPay,"")+
+        row("상품분 PG","+",m.pgGoods,"VAT 포함")+
+        (m.Pi>0?row("포인트 보전","+",m.Pi,""):"")+
+        row("상점 수수료","=",rvFee,ok(rvFee,m.Fg,"상점 수수료"),rvBase===null?"total":"")+
+        (rvBase===null?"":row("수수료 기준액","=",rvBase,won(rvFee)+" ÷ "+V.feeRate.toFixed(2)+"% · "+
+          (rvBase===m.S?"일치 · 셀러 매출 "+won(m.S):"셀러 매출 "+won(m.S)+"과 "+won(Math.abs(m.S-rvBase))+"원 차이 · 수수료 원 미만 버림 때문"),"total")))+
+      table("③ 전체 → 고객 실결제",
+        row("셀러 · 부가세 후","",m.sellerNet,"")+
+        (m.ShC>0?row("배송원가","+",m.ShC,""):"")+
+        row("셀러 부가세","+",m.sellerVatPay,"국세청")+
+        row("플랫폼 · 남는 현금","+",m.intoCash,"")+
+        row("플랫폼 부가세","+",m.intoVatPay,"국세청")+
+        row("PG 결제수수료","+",m.pg,"상품분 "+won(m.pgGoods)+" + 배송비분 "+won(m.pgShip))+
+        row("고객 실결제","=",rvPaid,ok(rvPaid,m.A,"고객 실결제"),(m.Pi>0||m.Ds>0)?"":"total")+
+        ((m.Pi>0||m.Ds>0)?
+          (m.Pi>0?row("포인트 사용분","+",m.Pi,""):"")+(m.Ds>0?row("셀러할인","+",m.Ds,""):"")+
+          (m.Sh>0?row("배송비","−",m.Sh,""):"")+
+          row("판매가","=",rvList,ok(rvList,m.P,"판매가"),"total"):""));
+    var vrow=function(nm,sum,tax,memo){ return '<tr><td>'+nm+'</td><td>'+won(sum)+'</td><td>'+won(sum-tax)+'</td><td>'+won(tax)+'</td><td class="memo">'+memo+'</td></tr>'; };
+    var dv=" ÷ "+(1+m.vat).toFixed(2);
+    $("#reverseVat").innerHTML=
+      '<thead><tr><th>부가세 역산</th><th>VAT 포함</th><th>공급가</th><th>세액</th><th class="memo" style="text-align:left">계산</th></tr></thead><tbody>'+
+      vrow("셀러 과세대상",m.taxIncl,m.sellerVatOut,"공급가 = "+won(m.taxIncl)+dv+" · 판매가 − 셀러할인 + 배송비")+
+      vrow("상점 수수료",m.Fg,m.Fv,"공급가 = "+won(m.Fg)+dv+" · 플랫폼 매출 · 셀러 매입")+
+      vrow("배송비 PG",m.pgShip,m.pgShipVatIn,"역산 아님 · 공급가 "+won(m.pgShipSupply)+" × "+pct(m.vat,0)+" 버림 · 셀러 매입")+
+      vrow("상품분 PG",m.pgGoods,m.pgGoodsVatIn,"역산 아님 · 전체 PG 세액 "+won(m.pgVatIn)+" − 배송비분 "+won(m.pgShipVatIn)+" · 플랫폼 매입")+
+      '<tr class="total"><td>셀러 납부세액</td><td></td><td></td><td>'+won(m.sellerVatPay)+'</td><td class="memo">'+won(m.sellerVatOut)+' − '+won(m.Fv)+' − '+won(m.pgShipVatIn)+(m.ShC>0?' − 배송원가 '+won(m.shipCostVatIn):'')+'</td></tr>'+
+      '<tr><td>플랫폼 납부세액</td><td></td><td></td><td>'+won(m.intoVatPay)+'</td><td class="memo">'+won(m.Fv)+' − '+won(m.pgGoodsVatIn)+' · 배송비 PG는 매출·매입 상계</td></tr></tbody>';
 
     /* --- 분배 막대 --- */
     var vals={seller:m.sellerGoods,ship:m.shipNet,disc:m.Ds,point:m.Pi,vat:m.intoVatPay,pg:m.pg,into:m.intoCash};

@@ -283,7 +283,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
         <details class="fold" id="reverseFold" open>
         <summary class="sec-head">
           <h2>역산 · 결과에서 거꾸로</h2>
-          <span class="note">주문 1건 · 남은 돈에 뗀 돈을 다시 더해 원래 금액과 맞는지 봅니다</span>
+          <span class="note"><span data-unit></span> · 남은 돈에 뗀 돈을 다시 더해 원래 금액과 맞는지 봅니다</span>
         </summary>
         <div class="sec-body">
           <div class="ledgers" id="reverse"></div>
@@ -295,7 +295,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
       <section>
         <div class="sec-head">
           <h2 id="bdTitle">판매가 + 배송비는 누구에게 가는가</h2>
-          <span class="note" id="breakdownNote">주문 1건 기준</span>
+          <span class="note" id="breakdownNote"></span>
         </div>
         <div class="sec-body">
           <div id="alerts" class="alerts"></div>
@@ -314,7 +314,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
 
       <section>
         <div class="sec-head">
-          <h2>정산 원장 · 주문 1건</h2>
+          <h2>정산 원장 · <span data-unit></span></h2>
           <span class="note">리뷰비는 월 합산 차감 → 아래 월 정산에 반영</span>
         </div>
         <div class="sec-body"><div class="ledgers" id="ledgers"></div></div>
@@ -447,7 +447,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
   // 화면 기본값은 중립 예시다. 실제 운영 조건은 코드에 두지 않고 임베드 주소에만 싣는다.
   var BASE={price:10000,sellerDisc:0,rvBal:0,ptPay:0,ship:3000,shipCost:0,
             feeRate:9,pgRate:2.3,vat:10,
-            orders:1000,refundRate:5,reviewRate:20,reviewPt:500,
+            orders:1,refundRate:0,reviewRate:0,reviewPt:500,
             eventPt:1500000,payDays:8};
   // 최소 조건: 배송비·환불·PG 없음, 주문 1건, 리뷰 0건
   var SHEET={price:20000,sellerDisc:2000,rvBal:0,ptPay:900,ship:0,shipCost:0,
@@ -470,7 +470,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
     {id:"pgRate",label:"PG 결제수수료율",min:0,max:6,step:0.1,unit:"%",help:"계약서 표기대로 <b>VAT 별도</b> 요율을 넣는다(KISPG 카드 2.3%, 간편결제 2.3~2.6%). 배송비 포함 총 결제액에 부과하고, 상품분은 상점 수수료에 포함돼 플랫폼이, <b>배송비분만 셀러가</b> 부담한다 †"},
     {id:"vat",label:"부가세율",min:0,max:20,step:1,unit:"%"},
     {grp:"월간"},
-    {id:"orders",label:"당월 주문 건수",min:0,max:5000,step:10,unit:"건",help:"위 주문 1건이 이만큼 반복된다고 가정"},
+    {id:"orders",label:"당월 주문 건수",min:0,max:5000,step:1,unit:"건",help:"위 주문 1건이 이만큼 반복된다고 가정. <b>화면의 모든 금액이 유효 건수(주문 − 환불) 합계</b>로 바뀐다"},
     {id:"refundRate",label:"환불률",min:0,max:50,step:1,unit:"%",help:"구매확정 전 취소·반품. 정산·상점 수수료는 구매확정 건에만 발생하므로 환불 건은 수수료도 없고, PG 수수료도 승인취소로 반환된다"},
     {id:"reviewRate",label:"리뷰 작성률",min:0,max:100,step:5,unit:"%",help:"유효(구매확정) 주문 대비. 리뷰는 구매확정 후 30일 안에만 쓸 수 있고, 확정 후에는 환불이 없다. 월말 확정분의 리뷰는 다음 달에 지급될 수 있지만, 매달 거래량이 비슷하다고 보고 <b>당월 리뷰 = 유효 주문 × 작성률</b>로 근사한다"},
     {id:"reviewPt",label:"리뷰 건당 포인트",min:0,max:3000,step:50,unit:"P",help:"셀러가 상품별로 정하는 값. <b>비용은 셀러가 100% 부담</b>하고 지급한 달 정산금에서 차감한다"},
@@ -691,16 +691,40 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
   }
   function table(cap,rows){ return '<table class="ledger"><caption>'+cap+'</caption><tbody>'+rows+'</tbody></table>'; }
 
+  // 건별 값을 유효 건수만큼 합친다. 수수료 세액·PG는 월 합계로 한 번만 계산한 값을 써서 월 정산·세금계산서와 맞춘다
+  function aggregate(o){
+    var k=o.Ne, q=Object.assign({},o);
+    ["P","Ds","Pi","PiWant","ptMax","RvP","InP","RvCash","InCash","rvLeft","Sh","ShC","Ag","A","S","total","taxIncl"].forEach(function(f){ q[f]=o[f]*k; });
+    q.Fg=o.mFeeGross; q.F=o.mFee; q.Fv=o.mFeeVat;
+    q.pg=o.mPg; q.pgSupply=o.mPgSupply; q.pgVatIn=o.mPgVat;
+    q.pgShip=o.mPgShipCharge; q.pgShipSupply=o.mPgShipSupply; q.pgShipVatIn=o.mPgShipVat;
+    q.pgGoods=o.mPgGoods; q.pgGoodsSupply=o.mPgGoodsSupply; q.pgGoodsVatIn=o.mPgGoodsVatIn;
+    q.shipNet=q.Sh-q.pgShip; q.sellerGoods=q.S-q.Fg; q.sellerOrder=q.sellerGoods+q.shipNet;
+    q.taxBase=q.taxIncl/(1+o.vat); q.sellerVatOut=r0(q.taxBase*o.vat);
+    q.shipCostVatIn=r0(q.ShC*o.vat/(1+o.vat));
+    q.sellerVatIn=q.Fv+q.pgShipVatIn+q.shipCostVatIn;
+    q.sellerVatPay=q.sellerVatOut-q.sellerVatIn;
+    q.sellerNet=q.sellerOrder-q.sellerVatPay-q.ShC;
+    q.intoOrder=q.Fg-q.Pi; q.intoNet=q.intoOrder-q.pgGoods;
+    q.intoVatPay=q.Fv-q.pgGoodsVatIn; q.intoCash=q.intoNet-q.intoVatPay;
+    q.takeGross=q.S?q.Fg/q.S:0; q.takeNet=q.Ag?q.intoOrder/q.Ag:0;
+    q.realRate=q.Ag?q.intoCash/q.Ag:0; q.sellerKeep=q.P?q.sellerNet/q.P:0;
+    return q;
+  }
   function render(){
-    var m=compute();
+    var mo=compute();        // 건별 + 월 값
+    var m=aggregate(mo);     // 위쪽 표는 유효 건수 합계로 보여 준다 (1건이면 건별 값과 같다)
+    var unit="유효 "+cnt(mo.Ne)+"건 합계";
 
     /* --- 경고 --- */
     var al=[];
     if(m.clamped) al.push('<div class="alert"><b>입력 초과.</b> 셀러할인은 판매가까지, 포인트는 할인 후 상품금액의 '+PT_CAP+'%('+won(m.ptMax)+'원)까지만 쓸 수 있어 한도로 잘라 계산했습니다.</div>');
-    if(m.intoCash<0) al.push('<div class="alert"><b>이 주문은 플랫폼이 손해입니다.</b> 받는 수수료 <span class="num">'+won(m.F+m.Fv)+'원</span>보다 내주는 돈(포인트 보전 '+won(m.Pi)+'원 + 상품분 PG '+won(m.pgGoods)+'원 + 부가세 '+won(m.intoVatPay)+'원)이 커서 건당 <span class="num">'+won(Math.abs(m.intoCash))+'원</span>씩 빠집니다.</div>');
+    if(m.intoCash<0) al.push('<div class="alert"><b>이 조건은 플랫폼이 손해입니다.</b> 받는 수수료 <span class="num">'+won(m.F+m.Fv)+'원</span>보다 내주는 돈(포인트 보전 '+won(m.Pi)+'원 + 상품분 PG '+won(m.pgGoods)+'원 + 부가세 '+won(m.intoVatPay)+'원)이 커서 '+unit+'로 <span class="num">'+won(Math.abs(m.intoCash))+'원</span>씩 빠집니다.</div>');
     if(m.mSellerRaw<0) al.push('<div class="alert warn"><b>셀러 정산금이 마이너스입니다.</b> 이번 달 줄 돈보다 뗄 돈이 <span class="num">'+won(Math.abs(m.mSellerRaw))+'원</span> 많습니다. 이번 달 지급을 보류하고(지급액 0원) 다음 달 정산에서 자동 상계합니다.</div>');
     if(m.opGeneral<0) al.push('<div class="alert warn"><b>당월 영업이익이 적자입니다.</b> 포인트 판매촉진비 <span class="num">'+won(m.mPromo)+'원</span>과 PG 비용을 수수료 매출이 덮지 못합니다'+(m.bep!==null&&m.bep>0?'. 손익분기 주문 건수는 <span class="num">'+cnt(m.bep)+'건</span>입니다':m.bep===null?'. 주문이 늘어도 적자가 커지는 구조입니다':'')+'.</div>');
     $("#alerts").innerHTML=al.join("");
+
+    document.querySelectorAll("[data-unit]").forEach(function(e){ e.textContent=unit; });
 
     /* --- 지표 타일 --- */
     var discRate=m.P?(m.Ds+m.Pi)/m.P:0;
@@ -723,7 +747,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
             '<br>매출세액 = 과세대상 '+won(m.taxIncl)+' ÷ '+(1+m.vat).toFixed(2)+' × '+vatPct+'%'+
             '<br>매입세액 = 상점 수수료 '+won(m.Fv)+(m.Sh>0?' + 배송비 PG '+won(m.pgShipVatIn):'')+(m.ShC>0?' + 배송원가 '+won(m.shipCostVatIn):'')+'</span>';
       })())+
-      tile("플랫폼 · 건당 남는 현금","₩"+won(m.intoCash),m.intoCash<0?"neg":"pos", (function(){
+      tile("플랫폼 · 남는 현금","₩"+won(m.intoCash),m.intoCash<0?"neg":"pos", (function(){
         var t=["상점 수수료 "+won(m.F+m.Fv)+"원(VAT 포함)"];
         if(m.pgGoods>0) t.push("− 상품분 PG "+won(m.pgGoods)+"원");
         if(m.Pi>0) t.push("− 포인트 보전 "+won(m.Pi)+"원");
@@ -738,7 +762,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
       '<thead><tr><th>지표</th><th>계산</th><th>값</th><th class="memo" style="text-align:left">읽는 법</th></tr></thead><tbody>'+
       '<tr><td>테이크레이트</td><td>상점 수수료(VAT 포함) ÷ 셀러 매출</td><td>'+pct(m.takeGross)+'</td><td class="memo">업계 통상 정의. 대외 자료에 쓰는 숫자</td></tr>'+
       '<tr><td>순 테이크레이트</td><td>(수수료+VAT−포인트 보전) ÷ 상품 실결제액</td><td>'+pct(m.takeNet)+'</td><td class="memo">PG가 플랫폼 앞으로 넘겨주는 몫. PG·부가세 차감 전</td></tr>'+
-      '<tr class="total"><td>플랫폼 실질</td><td>위에서 상품분 PG·부가세까지 차감</td><td class="'+(m.realRate<0?"neg":"pos")+'">'+pct(m.realRate)+'</td><td class="memo">건당 '+won(m.intoCash)+'원. 실제로 남는 돈</td></tr>'+
+      '<tr class="total"><td>플랫폼 실질</td><td>위에서 상품분 PG·부가세까지 차감</td><td class="'+(m.realRate<0?"neg":"pos")+'">'+pct(m.realRate)+'</td><td class="memo">'+unit+' '+won(m.intoCash)+'원. 실제로 남는 돈</td></tr>'+
       '</tbody>';
 
     /* --- 역산: 결과 값에서 출발해 다시 더한다. 검산은 모델의 입력 쪽 값과 비교한다 --- */
@@ -794,13 +818,13 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
     var vals={seller:m.sellerGoods,ship:m.shipNet,disc:m.Ds,point:m.Pi,vat:m.intoVatPay,pg:m.pg,into:m.intoCash};
     var shortfall=Math.max(0,-m.intoCash);
     var scale=m.total+shortfall;
-    $("#breakdownNote").textContent="주문 1건 기준 · 판매가 "+won(m.P)+"원 + 배송비 "+won(m.Sh)+"원";
+    $("#breakdownNote").textContent=unit+" · 판매가 "+won(m.P)+"원 + 배송비 "+won(m.Sh)+"원";
     $("#bdTitle").textContent="판매가 + 배송비 "+won(m.total)+"원은 누구에게 가는가";
 
     var W=1200,BX=8,BW=W-16,BY=32,BH=62,G=2;
     var svg=['<title id="barTitle">판매가 분배 막대</title>'];
     if(scale<=0){
-      svg.push('<text x="'+BX+'" y="'+(BY+30)+'" font-family="IBM Plex Mono, monospace" font-size="15" fill="var(--ink-3)">판매가를 입력하세요</text>');
+      svg.push('<text x="'+BX+'" y="'+(BY+30)+'" font-family="IBM Plex Mono, monospace" font-size="15" fill="var(--ink-3)">판매가와 주문 건수를 입력하세요</text>');
     }else{
       var x=BX;
       SEG.forEach(function(s){
@@ -849,7 +873,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
         row("판매가","",m.P,"")+
         row("셀러할인","−",m.Ds,"")+
         row("셀러 매출 (VAT 포함)","=",m.S,"실결제 + 포인트 사용분 보전")+
-        row("상점 수수료 (공급가)","−",m.F,baseLabel+" × "+V.feeRate.toFixed(2)+"% = "+won(m.Fg)+" (VAT·상품분 PG 포함)에서 역산")+
+        row("상점 수수료 (공급가)","−",m.F,baseLabel+" × "+V.feeRate.toFixed(2)+"% = "+won(m.Fg)+(mo.Ne>1?" · 건별 원 미만 버림":"")+" (VAT·상품분 PG 포함)에서 역산")+
         row("상점 수수료 부가세","−",m.Fv,"세금계산서 발행 · 플랫폼 매출")+
         row("배송비","+",m.Sh,"상점 수수료는 붙지 않는다")+
         row("결제수수료 (배송비분, 공급가)","−",m.pgShipSupply,"배송비 "+won(m.Sh)+" × "+V.pgRate.toFixed(1)+"% · 셀러 부담 · PG 비용 재청구")+
@@ -862,7 +886,7 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
         row("플랫폼 실수취","=",m.intoNet,"부가세 납부 전","total"))+
       table("포인트 배분 · ① 리뷰 → ② 플랫폼 포인트",
         row("포인트 결제액","",m.PiWant,"고객이 포인트로 내겠다고 한 금액 · 한도 "+won(m.ptMax)+"원(할인 후 상품금액의 "+PT_CAP+"%)")+
-        row("① 리뷰포인트에서","−",m.RvCash,"보유 "+pts(V.rvBal)+" 중 "+pts(m.RvP)+" 차감 · 1:1 · 잔여 "+pts(m.rvLeft)+" · 충당부채 감소")+
+        row("① 리뷰포인트에서","−",m.RvCash,"보유 "+pts(V.rvBal*mo.Ne)+" 중 "+pts(m.RvP)+" 차감 · 1:1 · 잔여 "+pts(m.rvLeft)+" · 충당부채 감소")+
         row("② 플랫폼 포인트에서","−",m.InCash,"부족분 · "+pts(m.InP)+" 차감 · 1:1 · 판매촉진비")+
         row("배분 합계","=",m.Pi,"플랫폼이 셀러에게 보전하는 현금","total"))+
       table("플랫폼 잔여현금",
@@ -871,22 +895,23 @@ footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-fa
         row("포인트 사용분 보전","−",m.Pi,"① 리뷰 "+won(m.RvCash)+"(충당부채 감소) + ② 플랫폼 포인트 "+won(m.InCash)+"(판매촉진비)")+
         row("PG 결제수수료 (전체)","−",m.pg,"상품분 "+won(m.pgGoods)+" + 배송비분 "+won(m.pgShip)+" · 총 결제액 "+won(m.A)+" × "+V.pgRate.toFixed(1)+"% + VAT †")+
         row("부가세 납부","−",m.intoVatPay,"매출세액 "+won(m.Fv+m.pgShipVatIn)+" − PG 매입세액 "+won(m.pgVatIn)+" · 배송비분은 상계")+
-        row("플랫폼 잔여현금","=",m.intoCash,"이 주문으로 플랫폼에 남는 돈","total"));
+        row("플랫폼 잔여현금","=",m.intoCash,unit+" · 플랫폼에 남는 돈","total"));
 
     /* --- 부가세 --- */
     $("#vatbox").innerHTML=
-      table("셀러 부가세 (주문 1건)",
+      table("셀러 부가세 ("+unit+")",
         row("과세대상 (VAT 포함)","",m.taxIncl,"판매가 − 셀러할인(에누리) + 배송비 · 플랫폼 보전 포인트는 포함")+
         row("과세표준","=",m.taxBase,"VAT 포함액 ÷ "+(1+m.vat).toFixed(2))+
         row("매출세액","",m.sellerVatOut,"")+
         row("매입세액","−",m.sellerVatIn,"상점 수수료 "+won(m.Fv)+" + 결제수수료(배송비분) "+won(m.pgShipVatIn)+" — 플랫폼 세금계산서"+(m.ShC>0?" + 배송원가 "+won(m.shipCostVatIn):""))+
         row("셀러 납부세액","=",m.sellerVatPay,"정산금에서 따로 빠져나간다","total"))+
-      table("플랫폼 부가세 (주문 1건)",
+      table("플랫폼 부가세 ("+unit+")",
         row("매출세액 (상점 수수료)","",m.Fv,"셀러에게 세금계산서 발행")+
         row("매출세액 (결제수수료·배송비분)","+",m.pgShipVatIn,"별도 세금계산서 · PG 비용 재청구")+
         row("매입세액 (PG)","−",m.pgVatIn,"PG사 세금계산서")+
         row("플랫폼 납부세액","=",m.intoVatPay,"배송비분은 매출·매입이 같아 상계","total"));
 
+    m=mo;   // 여기부터는 월 표 — 건별 값과 월 값을 그대로 쓴다
     /* --- 세금계산서 --- */
     $("#taxinv").innerHTML='<div class="ledgers">'+
       table("① 판매수수료분",
